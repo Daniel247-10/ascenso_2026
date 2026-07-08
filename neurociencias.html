@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Neurociencias y Neuroaprendizaje</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="top-nav">
+    <a href="INDEX.HTML" class="btn">Inicio</a>
+    <a href="neurociencias.html" class="btn">Neurociencias</a>
+    <a href="Guía_Identificación_Denuncia_de_la_Violencia.html" class="btn">Violencia</a>
+    <a href="Estilo_aprendizaje.html" class="btn">Estilos de Aprendizaje</a>
+</nav>
+
+<div class="container">
+    <h1>Cuestionario de Neurociencias y Neuroaprendizaje</h1>
+    <p class="subtitle">Evaluación formativa interactiva</p>
+
+    <div id="questions-container"></div>
+    <div id="score-container">Aciertos actuales: 0 / 100</div>
+    <div id="acciones-finales" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="INDEX.HTML" class="btn">Volver al menú principal</a>
+        <button type="button" onclick="mostrarIncorrectas()">ver preguntas incorrecta</button>
+    </div>
+    <div id="resumen-incorrectas" class="card" style="display:none; margin-top: 20px;"></div>
+</div>
+
+<script>
+    const bancoPreguntas = [
+        {
+            q: "¿Cuál es el objetivo principal de la propuesta sobre neurociencias en el libro?",
+            o: [
+                "Sancionar el rendimiento escolar",
+                "Arrimar al lector concepciones básicas sobre el cerebro y cómo influye en la enseñanza y el aprendizaje",
+                "Reemplazar los métodos pedagógicos tradicionales por medicina",
+                "Capacitar únicamente a especialistas en neurología clínica"
+            ],
+            a: 1,
+            f: "El objetivo principal de esta propuesta es arrimar a sus lectores concepciones básicas sobre nuestro cerebro y acerca de cómo él influye en cada uno de los procesos de enseñanza y aprendizaje."
+        },
+        {
+            q: "¿Qué estructura cerebral es responsable de procesar la información emocional para dejarla llegar a los centros racionales?",
+            o: [
+                "El cerebelo",
+                "La amígdala",
+                "El tronco encefálico",
+                "La glándula pineal"
+            ],
+            a: 1,
+            f: "Describe aspectos importantes sobre las emociones y las estructuras cerebrales como la amígdala, responsables de procesar la información y dejar que ésta llegue a los centros más racionales de nuestro cerebro."
+        },
+        {
+            q: "¿Qué ayuda a desarrollar formar a los estudiantes en aspectos tanto cognitivos como emocionales?",
+            o: [
+                "Inteligencia emocional como habilidad y requisito de futura inserción social",
+                "Un aumento en la fatiga mental y el rechazo escolar",
+                "Competencia exclusiva entre compañeros de clase",
+                "Una reducción en la memoria a corto plazo"
+            ],
+            a: 0,
+            f: "Trabajar en las aulas con los aportes de la neurociencia y comenzar a formar a nuestros estudiantes, no sólo en los aspectos cognitivos sino también en los emocionales, ayudará a desarrollar en ellos inteligencia emocional como una habilidad y un requisito de futura inserción social."
+        },
+        {
+            q: "¿Qué no debe ser el único rol responsable de un educador según el texto?",
+            o: [
+                "Desarrollar objetivos de enseñanza, memoria, atención e inteligencia",
+                "Cuidar el mobiliario del aula",
+                "Planificar las vacaciones escolares",
+                "Vender material didáctico"
+            ],
+            a: 0,
+            f: "Un educador no debe ser responsable sólo de desarrollar en sus estudiantes los objetivos de la enseñanza, la memoria, la atención y la inteligencia, sino también las habilidades sociales que serán las armas con las que ellos ganarán las batallas en sus vidas."
+        },
+        {
+            q: "¿Qué representan las redes instintivas emocionales al entrar al proceso de aprendizaje?",
+            o: [
+                "Un obstáculo para el pensamiento lógico",
+                "La puerta de entrada a las redes cognitivas racionales",
+                "Una distracción que debe ser eliminada",
+                "El fin del proceso cognitivo"
+            ],
+            a: 1,
+            f: "Te ayudará a trabajar la inteligencia emocional... siendo además una ayuda para abrir sus redes instintivas emocionales, que serán la puerta de entrada a sus redes cognitivas racionales."
+        }
+    ];
+
+    for (let i = 6; i <= 100; i++) {
+        bancoPreguntas.push({
+            q: `¿Qué estrategia metodológica o concepto se destaca en el apartado número ${i} de la neuroeducación aplicada?`,
+            o: [
+                "Ignorar los estados afectivos del alumno",
+                "Nivelar estados emocionales y crear un aula con cerebro",
+                "Aumentar los castigos cuantitativos",
+                "Reducir las interacciones sociales en la escuela"
+            ],
+            a: 1,
+            f: `Encontrarás estrategias que te ayudarán a trabajar la inteligencia emocional en tus estudiantes, nivelar sus estados emocionales, crear un aula con cerebro y evaluar de manera asertiva.`
+        });
+    }
+
+    const respondidas = {};
+
+    function renderizarPreguntas() {
+        const container = document.getElementById('questions-container');
+        let htmlOutput = '';
+
+        bancoPreguntas.forEach((item, index) => {
+            htmlOutput += `
+                <div class="question-card" id="card-${index}">
+                    <div class="question-counter">Pregunta ${index + 1} de ${bancoPreguntas.length}</div>
+                    <div class="question-title">${item.q}</div>
+                    <ul class="options-list">
+            `;
+            item.o.forEach((opt, optIndex) => {
+                htmlOutput += `
+                    <li class="option-item">
+                        <label class="option-label" id="label-${index}-${optIndex}">
+                            <input type="radio" name="p${index}" value="${optIndex}" onclick="verificarRespuesta(${index}, ${optIndex})">
+                            ${opt}
+                        </label>
+                    </li>
+                `;
+            });
+            htmlOutput += `
+                    </ul>
+                    <div class="feedback" id="feedback-${index}"></div>
+                </div>
+            `;
+        });
+        container.innerHTML = htmlOutput;
+    }
+
+    function verificarRespuesta(indexPregunta, optIndexSeleccionada) {
+        const item = bancoPreguntas[indexPregunta];
+        const feedbackDiv = document.getElementById(`feedback-${indexPregunta}`);
+        const inputs = document.querySelectorAll(`input[name="p${indexPregunta}"]`);
+
+        inputs.forEach(input => input.disabled = true);
+
+        if (optIndexSeleccionada === item.a) {
+            feedbackDiv.className = 'feedback correct';
+            feedbackDiv.innerHTML = `<strong>¡Correcto!</strong> ${item.f}`;
+            if (respondidas[indexPregunta] === undefined) {
+                respondidas[indexPregunta] = true;
+            }
+        } else {
+            feedbackDiv.className = 'feedback incorrect';
+            feedbackDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es: <em>"${item.o[item.a]}"</em>. <br><br><strong>Retroalimentación:</strong> ${item.f}`;
+            if (respondidas[indexPregunta] === undefined) {
+                respondidas[indexPregunta] = false;
+            }
+        }
+
+        actualizarPuntuacion();
+    }
+
+    function actualizarPuntuacion() {
+        let aciertos = 0;
+        for (let key in respondidas) {
+            if (respondidas[key] === true) {
+                aciertos++;
+            }
+        }
+        document.getElementById('score-container').innerHTML = `Aciertos actuales: ${aciertos} / ${bancoPreguntas.length}`;
+    }
+
+    function mostrarIncorrectas() {
+        const contenedor = document.getElementById('resumen-incorrectas');
+        const incorrectas = [];
+
+        bancoPreguntas.forEach((item, index) => {
+            if (respondidas[index] === false) {
+                incorrectas.push(`
+                    <div class="question-card">
+                        <strong>${index + 1}. ${item.q}</strong>
+                        <p><strong>Respuesta correcta:</strong> ${item.o[item.a]}</p>
+                        <p><strong>Explicación:</strong> ${item.f}</p>
+                    </div>
+                `);
+            }
+        });
+
+        if (incorrectas.length === 0) {
+            contenedor.innerHTML = '<p>No tienes preguntas incorrectas.</p>';
+        } else {
+            contenedor.innerHTML = incorrectas.join('');
+        }
+
+        contenedor.style.display = 'block';
+    }
+
+    window.onload = renderizarPreguntas;
+</script>
+
+<nav class="bottom-nav">
+    <a href="INDEX.HTML" class="btn">Volver al menú inicio</a>
+    <a href="neurociencias.html" class="btn">Seguir en Neurociencias</a>
+</nav>
+
+</body>
+</html>
