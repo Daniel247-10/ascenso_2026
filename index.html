@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="welcome-banner" id="welcome-banner" role="dialog" aria-live="polite" aria-label="Mensaje de bienvenida">
+    <div class="welcome-banner-content">
+        <div class="welcome-banner-text">
+            <div class="pc-doctor-title">PC DOCTOR</div>
+            <p class="welcome-subtitle">¡BIENVENIDOS, MAESTRAS Y MAESTROS!</p>
+            <p class="welcome-desc">Sistema de Preparación para el Examen de Ascenso de Categoría 2026</p>
+            <p class="welcome-elaborado">Este material ha sido elaborado por el:</p>
+            <p class="welcome-profesor">Prof. Daniel Llanos</p>
+            <p class="welcome-contacto">💻 Asesoría y soporte técnico</p>
+            <p class="welcome-celular">📱 Celular: 75136639</p>
+        </div>
+    </div>
+</div>
 <div class="container">
     <h1 class="main-title">ASCENSO DE CATEGORIA 2026</h1>
     <p class="subtitle">Explora diferentes temas y elige el cuestionario que más te interese.</p>
@@ -175,5 +188,13 @@
         </a>
     </div>
 </div>
+<script>
+    setTimeout(() => {
+        const banner = document.getElementById('welcome-banner');
+        if (banner) {
+            banner.classList.add('welcome-banner-hidden');
+        }
+    }, 1500);
+</script>
 </body>
 </html>
