@@ -144,6 +144,7 @@
 <script>
 function verificar(opcion, correcta, id) {
     let div = document.getElementById(id);
+    div.setAttribute('aria-live', 'polite');
     if (correcta) {
         div.className = 'feedback correct';
         div.style.display = 'block';

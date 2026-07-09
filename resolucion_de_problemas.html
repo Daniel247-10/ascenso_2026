@@ -1,0 +1,915 @@
+
+questions_data = [
+    {
+        "id": 1,
+        "question": "Según el manual y las perspectivas teóricas (como Boisvert, 2004), ¿cómo se define principalmente la resolución de problemas?",
+        "options": [
+            "Un proceso mecánico e intuitivo que evita el análisis reflexivo.",
+            "Una habilidad que implica un proceso activo que alterna entre el análisis y la acción.",
+            "Una técnica exclusiva para resolver acertijos lógicos sin aplicación en la vida real.",
+            "Un procedimiento burocrático para deslindar responsabilidades institucionales."
+        ],
+        "correct": 1,
+        "feedback": "La resolución de problemas no es estática ni puramente intuitiva; requiere un ejercicio dinámico y activo que combina el pensamiento analítico con la intervención práctica."
+    },
+    {
+        "id": 2,
+        "question": "¿Cuál es el objetivo primordial de trabajar la resolución de problemas en las y los estudiantes según el enfoque de UNICEF?",
+        "options": [
+            "Desarrollar únicamente un mejor razonamiento matemático abstracto.",
+            "Fortalecer el desarrollo socioemocional y la toma de decisiones asertivas para la vida.",
+            "Reducir el tiempo libre en los establecimientos educativos.",
+            "Preparar a los alumnos para competir en pruebas estandarizadas de memoria."
+        ],
+        "correct": 1,
+        "feedback": "El enfoque de habilidades transferibles busca dotar a los estudiantes de herramientas prácticas y socioemocionales aplicables a los desafíos cotidianos y de su futuro."
+    },
+    {
+        "id": 3,
+        "question": "¿Qué implica \"precisar el problema\" en la primera fase metodológica del manual?",
+        "options": [
+            "Asignar culpas de inmediato a los involucrados.",
+            "Identificar la existencia de una dificultad y analizarla a detalle para comprender sus causas reales.",
+            "Elaborar un cronograma de sanciones preventivas.",
+            "Ignorar los obstáculos menores y actuar por instinto."
+        ],
+        "correct": 1,
+        "feedback": "Antes de proponer salidas, la fase inicial exige delimitar con precisión la dificultad y desentrañar el origen del conflicto o problema."
+    },
+    {
+        "id": 4,
+        "question": "¿Qué beneficio directo aporta el desarrollo de esta habilidad en el ámbito académico del estudiante?",
+        "options": [
+            "Permite memorizar textos con mayor velocidad.",
+            "Ayuda a comprender y aplicar mejor lo aprendido en clase ante situaciones complejas.",
+            "Elimina por completo la necesidad de evaluaciones escritas.",
+            "Garantiza calificaciones perfectas sin esfuerzo adicional."
+        ],
+        "correct": 1,
+        "feedback": "La mejora académica se suscita porque el estudiante conecta la teoría con la praxis mediante procesos lógicos de pensamiento."
+    },
+    {
+        "id": 5,
+        "question": "¿Cómo influye el manejo adecuado de la resolución de problemas en los niveles de estrés y ansiedad?",
+        "options": [
+            "Los incrementa al obligar al estudiante a sobreanalizar todo.",
+            "Los reduce al contar con rutas y estrategias claras para enfrentar las dificultades.",
+            "No genera ningún cambio en el estado emocional.",
+            "Traslada el estrés del estudiante hacia el docente guía."
+        ],
+        "correct": 1,
+        "feedback": "Contar con un mapa de ruta estructurado disminuye la incertidumbre y, por ende, reduce la carga tensional ante los retos."
+    },
+    {
+        "id": 6,
+        "question": "¿Qué se entiende por un resultado óptimo en la resolución de problemas (Boisvert, 2004)?",
+        "options": [
+            "La postergación indefinida del conflicto.",
+            "La eliminación efectiva del problema.",
+            "La aceptación pasiva de la dificultad.",
+            "La asignación de un responsable externo."
+        ],
+        "correct": 1,
+        "feedback": "El fin último del proceso analítico y de acción es resolver la dificultad de raíz, logrando la eliminación del problema inicial."
+    },
+    {
+        "id": 7,
+        "question": "¿Qué tipo de procesos mentales se alternan durante la resolución activa de una dificultad?",
+        "options": [
+            "Análisis y acción.",
+            "Memoria a corto plazo y olvido selectivo.",
+            "Imitación y repetición.",
+            "Subjetividad y apatía."
+        ],
+        "correct": 0,
+        "feedback": "El ciclo metodológico transita constantemente entre pensar/analizar la situación y ejecutar acciones concretas para modificarla."
+    },
+    {
+        "id": 8,
+        "question": "¿Por qué es útil recurrir a experiencias previas al enfrentar un nuevo problema?",
+        "options": [
+            "Porque evita la necesidad de pensar en soluciones creativas.",
+            "Porque sirve de guía para trazar posibles rutas viables basadas en antecedentes similares.",
+            "Porque los problemas siempre se repiten exactamente de la misma manera.",
+            "Porque reduce la autoridad del docente en el aula."
+        ],
+        "correct": 1,
+        "feedback": "La recuperación de saberes previos dota al individuo de un repertorio de estrategias que ya demostraron utilidad en el pasado."
+    },
+    {
+        "id": 9,
+        "question": "¿Qué relación guarda este manual con los Objetivos de Desarrollo Sostenible (ODS)?",
+        "options": [
+            "Está alineado directamente con el ODS 4 sobre educación de calidad, inclusiva y equitativa.",
+            "Se enfoca exclusivamente en el ODS 13 sobre acción por el clima.",
+            "No tiene relación con la agenda internacional de desarrollo.",
+            "Responde únicamente a directrices comerciales privadas."
+        ],
+        "correct": 0,
+        "feedback": "El marco global de habilidades transferibles de UNICEF se vincula con el ODS 4 al promover aprendizajes útiles para toda la vida."
+    },
+    {
+        "id": 10,
+        "question": "¿Cuál es la actitud recomendada para el docente antes de impartir las lecciones de este manual a los estudiantes?",
+        "options": [
+            "Leer el documento superficialmente durante la clase.",
+            "Asimilar el contenido y realizar los ejercicios de manera personal mediante la práctica.",
+            "Delegar la lectura a los alumnos de mayor rendimiento.",
+            "Modificar la teoría sin seguir el orden de las lecciones."
+        ],
+        "correct": 1,
+        "feedback": "La enseñanza de habilidades socioemocionales es más efectiva cuando el educador ha experimentado y validado los ejercicios en lo personal."
+    },
+    {
+        "id": 11,
+        "question": "Dentro de la Lección 3, al preguntarse \"¿Cuál es el problema?\", el primer paso crítico consiste en:",
+        "options": [
+            "Juzgar de inmediato la actitud de los involucrados.",
+            "Describir objetivamente la dificultad sin emitir juicios anticipados.",
+            "Consultar la opinión de la comunidad en redes sociales.",
+            "Buscar un culpable directo."
+        ],
+        "correct": 1,
+        "feedback": "La objetividad en la descripción evita desviar la atención hacia falsas interpretaciones o prejuicios personales."
+    },
+    {
+        "id": 12,
+        "question": "¿Qué herramienta o estrategia propone el manual para profundizar en la causa raíz de una dificultad escolar o personal?",
+        "options": [
+            "La técnica de \"los cinco porqués\".",
+            "El análisis estadístico de varianza.",
+            "La prueba de ensayo y error aleatorio.",
+            "La amonestación escrita inmediata."
+        ],
+        "correct": 0,
+        "feedback": "Preguntar \"¿por qué?\" de manera sucesiva ayuda a desmantelar los síntomas superficiales hasta dar con el origen fundamental del problema."
+    },
+    {
+        "id": 13,
+        "question": "Al aplicar la técnica de \"los cinco porqués\", ¿de qué recurso se parte en cada nuevo cuestionamiento?",
+        "options": [
+            "De las suposiciones del director del centro.",
+            "De la respuesta obtenida en el porqué anterior.",
+            "Del reglamento general del escalafón.",
+            "De un listado arbitrario de sanciones."
+        ],
+        "correct": 1,
+        "feedback": "La secuencia lógica se construye encadenando cada pregunta directamente a la contestación previa para profundizar progresivamente."
+    },
+    {
+        "id": 14,
+        "question": "¿Por qué es necesario acudir a fuentes de información confiables al analizar un problema?",
+        "options": [
+            "Para rellenar informes burocráticos exigidos por la distrital.",
+            "Para ampliar la perspectiva, precisar las causas y evitar sesgos de percepción.",
+            "Para suspender la actividad práctica de los estudiantes.",
+            "Para sustituir el criterio pedagógico del profesor."
+        ],
+        "correct": 1,
+        "feedback": "La consulta de datos y fuentes fiables contrasta la visión subjetiva con la realidad objetiva del fenómeno estudiado."
+    },
+    {
+        "id": 15,
+        "question": "¿Qué tipos de fuentes se sugieren en el manual para recabar información sobre un conflicto complejo?",
+        "options": [
+            "Libros, revistas especializadas, entrevistas o especialistas en el tema.",
+            "Comentarios anónimos en foros de internet sin moderación.",
+            "Suposiciones compartidas entre compañeros de pasillo.",
+            "Historietas de entretenimiento informal."
+        ],
+        "correct": 0,
+        "feedback": "La rigurosidad de la información depende de la validez de las fuentes consultadas (textos formales, expertos o datos empíricos)."
+    },
+    {
+        "id": 16,
+        "question": "¿Qué riesgo se corre si se define un problema basándose únicamente en opiniones y emociones momentáneas?",
+        "options": [
+            "Que la solución implementada resuelva el problema de forma definitiva.",
+            "Que se ataque un síntoma superficial en lugar de la causa real del conflicto.",
+            "Que el proceso de resolución sea excesivamente rápido y eficiente.",
+            "Que se fomente la autonomía absoluta de los alumnos."
+        ],
+        "correct": 1,
+        "feedback": "La distorsión emocional nubla el juicio analítico, provocando intervenciones ineficaces que no erradican el origen del problema."
+    },
+    {
+        "id": 17,
+        "question": "¿En qué consiste dividir un problema complejo según las sugerencias metodológicas?",
+        "options": [
+            "En ignorar las partes difíciles y atender solo lo más fácil.",
+            "En fragmentar el problema en tareas o dificultades más pequeñas y manejables.",
+            "En repartir la culpa entre varios departamentos escolares.",
+            "En cancelar el proyecto si resulta muy grande."
+        ],
+        "correct": 1,
+        "feedback": "La descomposición de un problema complejo facilita su comprensión y permite diseñar estrategias específicas para cada componente."
+    },
+    {
+        "id": 18,
+        "question": "¿Qué papel juegan las opiniones de otras personas involucradas durante la fase de análisis?",
+        "options": [
+            "Ninguno, ya que el problema debe ser analizado de forma aislada.",
+            "Aportan múltiples perspectivas que enriquecen la comprensión integral del entorno.",
+            "Sirven para desacreditar la opinión del líder del equipo.",
+            "Retrasan innecesariamente el trabajo de aula."
+        ],
+        "correct": 1,
+        "feedback": "Integrar las vivencias y visiones de los demás evita una lectura parcial o unilateral de la situación problemática."
+    },
+    {
+        "id": 19,
+        "question": "Cuando un estudiante logra identificar claramente qué está fallando en una situación cotidiana, se encuentra ejerciendo:",
+        "options": [
+            "Una conducta reactiva y defensiva.",
+            "La capacidad de precisar el núcleo de la dificultad.",
+            "Un mecanismo de defensa psicológico.",
+            "La evasión de responsabilidades."
+        ],
+        "correct": 1,
+        "feedback": "Reconocer con precisión el fallo constituye el punto de arranque indispensable para cualquier ruta de solución constructiva."
+    },
+    {
+        "id": 20,
+        "question": "¿Qué se busca evitar al prohibir juicios de valor prematuros durante la delimitación del problema?",
+        "options": [
+            "Que los alumnos participen activamente.",
+            "El sesgo cognitivo que distorsiona la naturaleza real de la dificultad.",
+            "El uso de materiales impresos en el aula.",
+            "La colaboración grupal."
+        ],
+        "correct": 1,
+        "feedback": "Emitir juicios antes de tiempo bloquea el pensamiento crítico y de análisis objetivo de los hechos."
+    },
+    {
+        "id": 21,
+        "question": "¿Cuál es la característica principal de la fase de \"generación de soluciones\" en la Lección 5?",
+        "options": [
+            "Evaluar inmediatamente la viabilidad económica de cada idea.",
+            "Fomentar la fluidez y la creatividad de manera libre y sin emitir juicios críticos.",
+            "Seleccionar la primera opción que proponga el docente a cargo.",
+            "Descartar aquellas propuestas que parezcan poco convencionales."
+        ],
+        "correct": 1,
+        "feedback": "En la etapa de ideación creativa, la cantidad y la apertura mental priman sobre la crítica para no inhibir la innovación."
+    },
+    {
+        "id": 22,
+        "question": "¿Por qué se deben suspender las críticas durante la lluvia de ideas para resolver un problema?",
+        "options": [
+            "Para evitar que los estudiantes discutan entre ellos.",
+            "Para permitir que surjan alternativas diversas y originales sin miedo al rechazo.",
+            "Para terminar la clase con mayor rapidez.",
+            "Para que el profesor mantenga el control absoluto de las respuestas."
+        ],
+        "correct": 1,
+        "feedback": "El temor a la censura frena la originalidad; un ambiente seguro estimula la producción de soluciones creativas."
+    },
+    {
+        "id": 23,
+        "question": "¿Qué relación existe entre la generación de soluciones y el pensamiento divergente?",
+        "options": [
+            "Ninguna, la resolución de problemas es un proceso lineal estricto.",
+            "El pensamiento divergente permite explorar múltiples vías y perspectivas diferentes para una misma dificultad.",
+            "El pensamiento divergente confunde al estudiante y entorpece la acción.",
+            "Es una técnica reservada únicamente para las artes plásticas."
+        ],
+        "correct": 1,
+        "feedback": "Generar alternativas requiere abrir el abanico de posibilidades (divergencia) antes de concentrarse en la opción más adecuada (convergencia)."
+    },
+    {
+        "id": 24,
+        "question": "¿Qué debe hacerse si una idea generada inicialmente parece poco realista o fantasiosa?",
+        "options": [
+            "Sancionar al estudiante que la propuso por falta de seriedad.",
+            "Registrarla en la fase de lluvia de ideas, ya que puede inspirar soluciones viables posteriores.",
+            "Borrarla inmediatamente del registro de grupo.",
+            "Considerarla como la única solución oficial."
+        ],
+        "correct": 1,
+        "feedback": "Incluso las ideas extravagantes pueden contener elementos adaptables o estimular conexiones creativas útiles en el proceso."
+    },
+    {
+        "id": 25,
+        "question": "¿Cómo se demuestra que un grupo ha generado un abanico completo de alternativas?",
+        "options": [
+            "Cuando todas las respuestas de los equipos son idénticas.",
+            "Cuando se presentan opciones variadas que abordan el problema desde distintos ángulos o enfoques.",
+            "Cuando se reduce la lista a una sola propuesta rápida.",
+            "Cuando se evita proponer cambios al sistema."
+        ],
+        "correct": 1,
+        "feedback": "La diversidad de propuestas refleja la riqueza del análisis y la amplitud del ejercicio creativo del grupo."
+    },
+    {
+        "id": 26,
+        "question": "En la Lección 6, al evaluar las alternativas de solución, el análisis de los \"pros y contras\" sirve para:",
+        "options": [
+            "Justificar por qué no se debe hacer nada ante el problema.",
+            "Predecir las posibles consecuencias positivas y negativas de cada opción.",
+            "Encontrar culpables entre los miembros del equipo.",
+            "Medir la popularidad de las ideas del docente."
+        ],
+        "correct": 1,
+        "feedback": "Pesar las ventajas y desventajas ayuda a anticipar los efectos colaterales de cada alternativa antes de tomar una decisión."
+    },
+    {
+        "id": 27,
+        "question": "¿Qué factor subjetivo interviene de manera decisiva al valorar los pros y los contras de una solución?",
+        "options": [
+            "El número de páginas del manual de consulta.",
+            "Los valores, opiniones y necesidades personales o del grupo.",
+            "La normativa ministerial de calificaciones.",
+            "La velocidad de ejecución técnica."
+        ],
+        "correct": 1,
+        "feedback": "Lo que para una persona representa una gran ventaja o un contra inaceptable depende de su escala de valores y prioridades."
+    },
+    {
+        "id": 28,
+        "question": "¿Por qué las respuestas en la evaluación de consecuencias de una solución pueden variar entre diferentes estudiantes?",
+        "options": [
+            "Porque el manual contiene errores de redacción.",
+            "Porque la importancia y el impacto de los factores son percibidos de forma personal y subjetiva.",
+            "Porque los alumnos no leyeron la bibliografía oficial.",
+            "Porque el profesor asigna calificaciones arbitrarias."
+        ],
+        "correct": 1,
+        "feedback": "La subjetividad inherente a las vivencias humanas hace que la valoración de las consecuencias no sea uniforme ni rígida."
+    },
+    {
+        "id": 29,
+        "question": "¿Qué busca el apartado de \"nueva solución\" tras evaluar los pros y los contras iniciales?",
+        "options": [
+            "Descartar por completo el problema original.",
+            "Mejorar o refinar la solución propuesta integrando el aprendizaje de las consecuencias analizadas.",
+            "Iniciar una nueva lluvia de ideas desde cero sin criterio.",
+            "Cambiar de docente responsable."
+        ],
+        "correct": 1,
+        "feedback": "El refinamiento permite transformar una idea burda en una estrategia optimizada y adaptada a la realidad."
+    },
+    {
+        "id": 30,
+        "question": "¿Qué representa un \"contra\" de alto riesgo al evaluar una alternativa para la convivencia escolar?",
+        "options": [
+            "Que la solución requiera lápiz y papel.",
+            "Que genere efectos secundarios perjudiciales para la integridad emocional o física de los miembros de la comunidad.",
+            "Que la actividad tome más de diez minutos.",
+            "Que el director de la unidad educativa deba firmar un sello."
+        ],
+        "correct": 1,
+        "feedback": "Una opción cuyos contras vulneran los derechos o el bienestar de la comunidad debe ser descartada o modificada profundamente."
+    },
+    {
+        "id": 31,
+        "question": "En la Lección 7, al distinguir entre \"lo importante y lo no tan importante\", el criterio de selección se basa en:",
+        "options": [
+            "La cantidad de recursos económicos requeridos sin importar el resultado.",
+            "El peso relativo y la relevancia directa de los elementos para la solución del objetivo principal.",
+            "El gusto personal del estudiante por una materia específica.",
+            "El orden alfabético de las propuestas."
+        ],
+        "correct": 1,
+        "feedback": "Jerarquizar implica separar la paja del trigo, enfocando los esfuerzos en aquello que realmente transforma la situación."
+    },
+    {
+        "id": 32,
+        "question": "¿Qué habilidad cognitiva se moviliza de forma central en la Lección 8 al \"comparar y contrastar\"?",
+        "options": [
+            "Identificar en qué se parecen y en qué difieren de manera crítica las alternativas candidatas.",
+            "Memorizar un listado de definiciones teóricas.",
+            "Repetir un procedimiento algorítmico sin variantes.",
+            "Ignorar las diferencias secundarias de los métodos."
+        ],
+        "correct": 0,
+        "feedback": "Comparar y contrastar exige establecer similitudes y divergencias sustanciales entre opciones para dictaminar su pertinencia."
+    },
+    {
+        "id": 33,
+        "question": "¿Qué dificultad metodológica suele presentarse al iniciar el contraste de soluciones candidatas?",
+        "options": [
+            "La falta de hojas de trabajo en el recinto escolar.",
+            "El establecimiento de las categorías o criterios objetivos de comparación.",
+            "La negativa de los estudiantes a trabajar en silencio.",
+            "La impresión de que todas las opciones son idénticas."
+        ],
+        "correct": 1,
+        "feedback": "Definir sobre qué parámetros se va a medir cada alternativa (ej. costo, tiempo, impacto, viabilidad) es el reto analítico principal de este paso."
+    },
+    {
+        "id": 34,
+        "question": "Cuando se analizan dos opciones de transporte para ir a la escuela (bicicleta vs. autobús), ¿qué criterios son útiles para contrastarlas?",
+        "options": [
+            "El color del vehículo y la marca del asiento.",
+            "Costo, dificultad de traslado, tiempo estimado y preparación previa necesaria.",
+            "La simpatía del chofer con la comunidad.",
+            "El número de ventanas del autobús."
+        ],
+        "correct": 1,
+        "feedback": "Los criterios funcionales y prácticos son los que permiten evaluar con rigor cuál alternativa es más sensata para la situación de Martha."
+    },
+    {
+        "id": 35,
+        "question": "¿Cuál es el propósito final de la comparación sistemática entre opciones de solución?",
+        "options": [
+            "Descartar todas las opciones para no asumir riesgos.",
+            "Llegar a una conclusión fundamentada sobre cuál alternativa es la más pertinente para ser elegida.",
+            "Prolongar el debate institucional de manera indefinida.",
+            "Demostrar la superioridad teórica del facilitador."
+        ],
+        "correct": 1,
+        "feedback": "El contraste riguroso conduce de manera natural a la selección de la opción óptima basada en evidencias y criterios claros."
+    },
+    {
+        "id": 36,
+        "question": "En la Lección 9, ¿cómo se define el concepto central de la \"planificación\"?",
+        "options": [
+            "Una serie de pasos improvisados para reaccionar ante imprevistos.",
+            "Definir una serie de pasos necesarios, asignar responsables, prever recursos y establecer un cronograma para alcanzar una meta.",
+            "Tomar decisiones impulsivas para resolver la urgencia del día.",
+            "Ignorar los obstáculos y confiar exclusivamente en la buena suerte."
+        ],
+        "correct": 1,
+        "feedback": "Planificar es estructurar operativamente el camino mediante la asignación metódica de tiempos, tareas y recursos."
+    },
+    {
+        "id": 37,
+        "question": "¿Por qué resulta crucial la planificación en la resolución de problemas complejos que involucran a un equipo?",
+        "options": [
+            "Porque permite coordinar las acciones de todos los participantes de forma organizada y dar seguimiento.",
+            "Porque elimina la necesidad de comunicarse entre compañeros.",
+            "Porque evita que el facilitador supervise el trabajo.",
+            "Porque reduce los costos a cero de manera automática."
+        ],
+        "correct": 0,
+        "feedback": "La sincronización de esfuerzos colectivos colapsa sin una planificación clara que asigne responsabilidades y plazos."
+    },
+    {
+        "id": 38,
+        "question": "¿Qué se recomienda hacer si una tarea dentro de la planificación de un proyecto áulico resulta demasiado amplia?",
+        "options": [
+            "Cancelar el proyecto completo por considerarlo inalcanzable.",
+            "Dividirla en tareas secundarias más pequeñas, concretas y fáciles de gestionar.",
+            "Delegarla a una sola persona sin importar su carga.",
+            "Omitir su cumplimiento en el informe final."
+        ],
+        "correct": 1,
+        "feedback": "Fragmentar tareas complejas disminuye la sensación de abrumo y facilita el control de avance del plan."
+    },
+    {
+        "id": 39,
+        "question": "¿Qué rol cumple la evaluación en la etapa posterior a la implementación de una solución?",
+        "options": [
+            "Verificar si la estrategia funcionó y si eliminó efectivamente el problema inicial.",
+            "Sancionar los errores cometidos durante la fase de lluvia de ideas.",
+            "Modificar los objetivos originales del proyecto educativo.",
+            "Justificar el tiempo invertido ante las autoridades."
+        ],
+        "correct": 0,
+        "feedback": "Evaluar el impacto de la acción ejecutada permite comprobar el éxito de la intervención o ajustar el rumbo si persistieran dificultades."
+    },
+    {
+        "id": 40,
+        "question": "¿En qué tipo de situaciones la planificación y el seguimiento recaen exclusivamente en una sola persona?",
+        "options": [
+            "En la resolución de problemas de índole estrictamente personal o de autocontrol.",
+            "En la organización de un evento masivo a nivel distrital.",
+            "En la construcción de la infraestructura de una unidad educativa.",
+            "En la gestión curricular de todo el departamento."
+        ],
+        "correct": 0,
+        "feedback": "Cuando el conflicto es de resolución individual (ej. gestión del propio estrés), el compromiso operativo depende del sujeto involucrado."
+    },
+    {
+        "id": 41,
+        "question": "La Lección 10 del manual se enfoca fundamentalmente en:",
+        "options": [
+            "Leer bibliografía teórica sin aplicación práctica.",
+            "Poner en práctica lo aprendido aplicando todos los pasos revisados para resolver un problema real de la comunidad escolar.",
+            "Evaluar la memoria a corto plazo de los estudiantes mediante un examen escrito.",
+            "Redactar memorandos de llamada de atención institucional."
+        ],
+        "correct": 1,
+        "feedback": "La última lección sella el ciclo pedagógico trasladando las herramientas metodológicas a un escenario real de la escuela."
+    },
+    {
+        "id": 42,
+        "question": "¿Qué actitud debe adoptar un facilitador ante los obstáculos que surgen durante la aplicación del proyecto final en la comunidad escolar?",
+        "options": [
+            "Abandonar la intervención institucional.",
+            "Analizarlos y ajustarlos mediante la revisión de las etapas del manual en lugar de retraerse.",
+            "Culpar al Marco Global de Habilidades Transferibles.",
+            "Ocultar los fallos en los registros oficiales."
+        ],
+        "correct": 1,
+        "feedback": "Los obstáculos son parte natural del proceso; la competencia se demuestra al aplicar la resiliencia y el análisis para sortearlos."
+    },
+    {
+        "id": 43,
+        "question": "¿Cuál es el orden lógico correcto de los primeros pasos para resolver un problema según el manual?",
+        "options": [
+            "Elegir solución → Implementar → Identificar problema → Analizar causas.",
+            "Identificar el problema → Analizar el problema (causas) → Generar posibles soluciones → Evaluar pros y contras.",
+            "Evaluar consecuencias → Elegir al azar → Analizar el problema.",
+            "Actuar impulsivamente → Identificar el problema → Ignorar causas."
+        ],
+        "correct": 1,
+        "feedback": "El rigor metodológico exige identificar primero la dificultad, comprender su raíz, proponer alternativas y evaluar sus consecuencias antes de implementar."
+    },
+    {
+        "id": 44,
+        "question": "¿Qué premisa resume el espíritu del Anexo de diagnóstico y revisión final de aprendizajes?",
+        "options": [
+            "Comprobar de forma reflexiva el dominio adquirido sobre las habilidades de resolución de problemas.",
+            "Rellenar formatos sin sentido pedagógico.",
+            "Establecer un ranking punitivo de docentes.",
+            "Memorizar fórmulas matemáticas abstractas."
+        ],
+        "correct": 0,
+        "feedback": "Los diagnósticos e instrumentos de revisión permiten al educador y al alumno medir su evolución metacognitiva."
+    },
+    {
+        "id": 45,
+        "question": "¿Qué se debe evitar firmemente al guiar a los estudiantes en la toma de decisiones finales (según la pauta de la Guía)?",
+        "options": [
+            "Involucrar a los adultos e instituciones responsables.",
+            "Permitir que se piense que no hay solución o dejar obstáculos sin examinar.",
+            "Analizar las consecuencias de las opciones.",
+            "Establecer prioridades claras de acción."
+        ],
+        "correct": 1,
+        "feedback": "Un educador asertivo jamás transmite desesperanza ni deja cabos sueltos ante un problema tratable."
+    },
+    {
+        "id": 46,
+        "question": "¿Qué representa la metacognición en el proceso de resolución de problemas (mencionada también en textos de neuroeducación)?",
+        "options": [
+            "La capacidad de memorizar conceptos sin reflexionar.",
+            "Reflexionar sobre cómo se analizó, se pensó y se resolvió la dificultad experimentada.",
+            "La velocidad con la que se entrega un trabajo escrito.",
+            "La obediencia ciega a las instrucciones del manual."
+        ],
+        "correct": 1,
+        "feedback": "La metacognición implica pensar sobre el propio pensamiento, evaluando la eficacia de las estrategias cognitivas empleadas."
+    },
+    {
+        "id": 47,
+        "question": "Cuando se promueve la venta de un producto para recaudar fondos y solucionar un problema institucional (como un viaje de un equipo deportivo), el ejercicio fomenta:",
+        "options": [
+            "La especulación financiera sin sentido.",
+            "La creatividad aplicada, la planificación colaborativa y la obtención de recursos reales.",
+            "La dependencia económica del ministerio.",
+            "La memorización de catálogos comerciales."
+        ],
+        "correct": 1,
+        "feedback": "Este tipo de actividades áulicas conectan la solución ideada con la movilización práctica de recursos y la cohesión de equipo."
+    },
+    {
+        "id": 48,
+        "question": "¿Qué diferencia fundamental existe entre actuar sin un plan y actuar con un plan metodológico?",
+        "options": [
+            "El plan metodológico garantiza el éxito absoluto sin requerir esfuerzo.",
+            "El plan otorga orden, asignación de responsables y previsión de recursos frente a la improvisación impulsiva.",
+            "El plan hace que el proceso sea más lento y aburrido.",
+            "No existe ninguna diferencia en términos prácticos."
+        ],
+        "correct": 1,
+        "feedback": "Planificar estructura la intervención de manera lógica, minimizando los riesgos de errores graves por decisiones precipitadas."
+    },
+    {
+        "id": 49,
+        "question": "¿Por qué el manual enfatiza que la resolución de problemas es una herramienta para la vida y el futuro de los estudiantes?",
+        "options": [
+            "Porque los prepara para enfrentar con autonomía e independencia cualquier obstáculo personal o laboral.",
+            "Porque reemplaza la formación universitaria técnica.",
+            "Porque se enfoca en aprobar exámenes estandarizados.",
+            "Porque elimina los conflictos humanos de la sociedad."
+        ],
+        "correct": 0,
+        "feedback": "Las habilidades transferibles trascienden el aula; forman ciudadanos capaces de autogestionar su destino y resolver adversidades con madurez."
+    },
+    {
+        "id": 50,
+        "question": "¿Qué se concluye acerca del éxito en la aplicación de las 10 lecciones del manual en la práctica docente?",
+        "options": [
+            "Que depende exclusivamente de la imposición de castigos ejemplares.",
+            "Que se consolida al integrar la reflexión analítica, la gestión emocional y la acción planificada en el quehacer cotidiano.",
+            "Que es un requisito administrativo sin utilidad pedagógica.",
+            "Que debe aplicarse únicamente en casos de emergencia extrema."
+        ],
+        "correct": 1,
+        "feedback": "El éxito radica en transformar el manual en un hábito de pensamiento crítico y constructivo dentro de la cultura escolar."
+    }
+]
+
+import json
+questions_json = json.dumps(questions_data, ensure_ascii=False)
+
+html_content = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Interactiva: Manual de Resolución de Problemas</title>
+    <style>
+        :root {{
+            --primary: #581845;
+            --primary-light: #f2e9f0;
+            --secondary: #900C3F;
+            --accent: #C70039;
+            --success: #28a745;
+            --error: #dc3545;
+            --bg-color: #fcf9fb;
+            --card-bg: #ffffff;
+            --text-color: #2b2b2b;
+            --border-color: #e2d7e0;
+        }}
+        
+        * {{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }}
+        
+        body {{
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }}
+        
+        .container {{
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(88, 24, 69, 0.08);
+            padding: 40px;
+            border-top: 6px solid var(--primary);
+        }}
+        
+        header {{
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 20px;
+        }}
+        
+        header h1 {{
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }}
+        
+        header p {{
+            color: #666;
+            font-size: 0.95rem;
+        }}
+        
+        .score-panel {{
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }}
+        
+        .question-card {{
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }}
+        
+        .question-card.answered {{
+            border-color: #ccc;
+        }}
+        
+        .question-title {{
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }}
+        
+        .options-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }}
+        
+        .option-item {{
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border: 1px solid #dcd1da;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #faf7f9;
+        }}
+        
+        .option-item:hover:not(.disabled) {{
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }}
+        
+        .option-item input {{
+            margin-right: 12px;
+            margin-top: 3px;
+            cursor: pointer;
+        }}
+        
+        .option-item.correct {{
+            background-color: #d4edda !important;
+            border-color: var(--success) !important;
+            color: #155724;
+        }}
+        
+        .option-item.incorrect {{
+            background-color: #f8d7da !important;
+            border-color: var(--error) !important;
+            color: #721c24;
+        }}
+        
+        .option-item.disabled {{
+            cursor: default;
+        }}
+        
+        .feedback-box {{
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }}
+        
+        .feedback-box.show {{
+            display: block;
+        }}
+        
+        .feedback-box.correct-fb {{
+            background-color: #e2f0d9;
+            color: #385723;
+            border-left: 4px solid var(--success);
+        }}
+        
+        .feedback-box.incorrect-fb {{
+            background-color: #fde2e4;
+            color: #842029;
+            border-left: 4px solid var(--error);
+        }}
+        
+        @keyframes fadeIn {{
+            from {{ opacity: 0; transform: translateY(-5px); }}
+            to {{ opacity: 1; transform: translateY(0); }}
+        }}
+        
+        .footer-action {{
+            text-align: center;
+            margin-top: 40px;
+        }}
+        
+        .btn {{
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }}
+        
+        .btn:hover {{
+            background-color: var(--secondary);
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Evaluación Interactiva</h1>
+            <p>Manual de Resolución de Problemas - Banco de 50 Preguntas con Retroalimentación Instantánea</p>
+        </header>
+        
+        <div class="score-panel">
+            <span>Progreso contestado: <span id="answered-count">0</span> / 50</span>
+            <span>Aciertos: <span id="score-count">0</span></span>
+        </div>
+        
+        <div id="quiz-container"></div>
+        
+        <div class="footer-action">
+            <button class="btn" onclick="resetQuiz()">Reiniciar Evaluación</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = {questions_json};
+        
+        let userAnswers = new Array(questions.length).fill(null);
+        let score = 0;
+        let answeredCount = 0;
+
+        function renderQuiz() {{
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {{
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${{index}}`;
+                
+                let html = `<div class="question-title">${{index + 1}}. ${{q.question}}</div>`;
+                html += '<div class="options-list">';
+                
+                q.options.forEach((opt, optIndex) => {{
+                    html += `
+                        <label class="option-item" id="opt-${{index}}-${{optIndex}}" onclick="selectOption(${{index}}, ${{optIndex}})">
+                            <input type="radio" name="question-${{index}}" value="${{optIndex}}" id="radio-${{index}}-${{optIndex}}">
+                            <span>${{opt}}</span>
+                        </label>
+                    `;
+                }});
+                
+                html += '</div>';
+                html += `<div class="feedback-box" id="feedback-${{index}}"></div>`;
+                
+                card.innerHTML = html;
+                container.appendChild(card);
+            }});
+        }}
+
+        function selectOption(qIndex, optIndex) {{
+            if (userAnswers[qIndex] !== null) return; // ya respondida
+            
+            userAnswers[qIndex] = optIndex;
+            answeredCount++;
+            
+            const q = questions[qIndex];
+            const isCorrect = (optIndex === q.correct);
+            
+            if (isCorrect) {{
+                score++;
+            }}
+            
+            // Actualizar interfaz de opciones
+            q.options.forEach((_, i) => {{
+                const item = document.getElementById(`opt-${{qIndex}}-${{i}}`);
+                item.classList.add('disabled');
+                if (i === q.correct) {{
+                    item.classList.add('correct');
+                }} else if (i === optIndex && !isCorrect) {{
+                    item.classList.add('incorrect');
+                }}
+            }});
+            
+            // Marcar radio button
+            document.getElementById(`radio-${{qIndex}}-${{optIndex}}`).checked = true;
+            
+            // Mostrar feedback
+            const fbBox = document.getElementById(`feedback-${{qIndex}}`);
+            fbBox.className = `feedback-box show ${{isCorrect ? 'correct-fb' : 'incorrect-fb'}}`;
+            fbBox.innerHTML = `<strong>${{isCorrect ? '¡Correcto!' : 'Incorrecto.'}}</strong> ${{q.feedback}}`;
+            
+            document.getElementById(`q-card-${{qIndex}}`).classList.add('answered');
+            
+            // Actualizar paneles superiores
+            document.getElementById('answered-count').innerText = answeredCount;
+            document.getElementById('score-count').innerText = score;
+        }}
+
+        function resetQuiz() {{
+            userAnswers = new Array(questions.length).fill(null);
+            score = 0;
+            answeredCount = 0;
+            document.getElementById('answered-count').innerText = answeredCount;
+            document.getElementById('score-count').innerText = score;
+            renderQuiz();
+        }}
+
+        // Inicializar al cargar
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
+"""
+
+# Save to file
+output_path = "evaluacion_resolucion_problemas.html"
+with open(output_path, "w", encoding="utf-8") as f:
+    f.file = f.write(html_content)
+
+print(f"File generated successfully: {output_path}")
