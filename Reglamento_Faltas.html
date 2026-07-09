@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Reglamento de Faltas y Sanciones</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 850px; margin: 0 auto; padding: 20px; background-color: #f0f4f8; color: #2c3e50; }
+        h1 { text-align: center; color: #1a5276; border-bottom: 3px solid #1a5276; padding-bottom: 10px; text-transform: uppercase; }
+        .question-card { background: #ffffff; padding: 25px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 6px solid #1a5276; }
+        .question-text { font-size: 1.15em; font-weight: bold; margin-bottom: 15px; color: #1c2833; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; padding: 12px 18px; border: 1px solid #d5dbdb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; background: #fdfefe; }
+        .options li:hover { background-color: #ebf5fb; border-color: #3498db; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: fadeIn 0.3s; border-left: 5px solid; }
+        .correct { background-color: #d4efdf; color: #145a32; border-color: #a9dfbf; }
+        .incorrect { background-color: #f9ebea; color: #7b241c; border-color: #f2d7d5; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Reglamento de Faltas y Sanciones (RS 212414)</h1>
+    <div id="quiz-container"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const quizData = [
+            { q: "1. ¿A quiénes se aplica específicamente el Reglamento de Faltas y Sanciones?", options: ["a) Únicamente a los maestros normalistas.", "b) A todo el personal comprendido en los artículos 20 y 21 del Escalafón Nacional.", "c) Solo a directores y administrativos del Ministerio.", "d) A todos los estudiantes del sistema educativo."], correct: 1, retro: "Retroalimentación: Según el Art. 1, se aplica a todo el personal del Escalafón y organismos descentralizados." },
+            { q: "2. ¿Cómo se sustancian los hechos que constituyen delitos según el Código Penal?", options: ["a) Mediante el tribunal disciplinario del magisterio.", "b) Según las normas del Código Penal y de Procedimiento Penal.", "c) Como faltas muy graves internas.", "d) Mediante una comisión de padres."], correct: 1, retro: "Retroalimentación: El Art. 2 aclara que los delitos se rigen por la justicia ordinaria penal." },
+            { q: "3. ¿Cuál es la base legal que fundamenta el derecho ineludible de defensa del docente?", options: ["a) Voluntad del director.", "b) Constitución Política, legislación penal y UNESCO 1966.", "c) Reglamento interno de la escuela.", "d) Acuerdos verbales sindicato-ministerio."], correct: 1, retro: "Retroalimentación: El Art. 3 establece garantías nacionales e internacionales ineludibles." },
+            { q: "4. ¿Qué establece el reglamento respecto al juzgamiento por 'comisiones especiales'?", options: ["a) Permitidas en casos públicos.", "b) Terminantemente prohibidas para faltas disciplinarias.", "c) Obligatorias en faltas muy graves.", "d) Solo para casos leves."], correct: 1, retro: "Retroalimentación: El Art. 4 prohíbe juzgar mediante tribunales extraordinarios o irregulares." },
+            { q: "5. Durante un proceso disciplinario, ¿cuál es la situación laboral del trabajador?", options: ["a) Suspensión inmediata sin sueldo.", "b) Presunción de inocencia, sin suspensión ni remoción hasta culpabilidad.", "c) Traslado de distrito preventivo.", "d) Vacaciones obligatorias."], correct: 1, retro: "Retroalimentación: Según Art. 5 y 6, se garantiza la continuidad laboral hasta que se pruebe culpabilidad." },
+            { q: "6. ¿En qué caso procede la suspensión inmediata antes de comprobar la culpabilidad?", options: ["a) Ante cualquier falta grave.", "b) Solo en el inciso a) de faltas muy graves (reincidencia).", "c) Inasistencia de tres días.", "d) Desorden en registros."], correct: 1, retro: "Retroalimentación: El Art. 6 establece esta única excepción como medida precautoria." },
+            { q: "7. ¿Cómo define el reglamento el concepto de 'faltas'?", options: ["a) Error involuntario en aula.", "b) Incumplimiento de deberes constitucionales, leyes y el reglamento.", "c) Falta de puntualidad diaria.", "d) Desobediencia a la junta escolar."], correct: 1, retro: "Retroalimentación: El Art. 7 vincula las faltas al incumplimiento de normas legales vigentes." },
+            { q: "8. ¿Cuál es la clasificación oficial de las faltas?", options: ["a) Primarias, secundarias y terciarias.", "b) Leves, graves y muy graves.", "c) Administrativas y penales.", "d) Personales e institucionales."], correct: 1, retro: "Retroalimentación: El Art. 8 establece esta escala jerárquica de infracciones." },
+            { q: "9. ¿Qué tipo de falta es la suspensión de labores por cumpleaños del director?", options: ["a) Falta grave.", "b) Falta leve.", "c) Falta muy grave.", "d) No es falta."], correct: 1, retro: "Retroalimentación: El Art. 9 inciso a) sanciona el uso de tiempo laboral para agasajos personales." },
+            { q: "10. El consumo de cigarrillos en ambientes escolares se tipifica como:", options: ["a) Falta muy grave.", "b) Falta grave.", "c) Falta leve.", "d) Permitido en recreos."], correct: 2, retro: "Retroalimentación: Está prohibido fumar en recintos escolares según Art. 9 inciso e)." },
+            { q: "11. ¿Qué nivel de infracción constituye el 'abandono injustificado de funciones'?", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Despido directo."], correct: 0, retro: "Retroalimentación: El Art. 9 inciso f) lo clasifica inicialmente como falta leve." },
+            { q: "12. Utilizar a los alumnos en mandados particulares es una:", options: ["a) Falta grave.", "b) Falta leve.", "c) Falta muy grave.", "d) Práctica cultural."], correct: 1, retro: "Retroalimentación: Es una infracción a la ética docente de carácter leve (Art. 9, h)." },
+            { q: "13. La reincidencia voluntaria en faltas leves se convierte en:", options: ["a) Amonestación escrita.", "b) Falta grave.", "c) Falta muy grave.", "d) Traslado."], correct: 1, retro: "Retroalimentación: Según Art. 10 inciso a), la repetición de lo leve escala a grave." },
+            { q: "14. ¿Qué tipo de falta es la extorsión a los alumnos ofreciendo notas por dinero?", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Solo delito penal."], correct: 1, retro: "Retroalimentación: Es una falta grave tipificada en el Art. 10 inciso b)." },
+            { q: "15. Organizar fiestas con bebidas alcohólicas en el lugar de trabajo es:", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Recreación permitida."], correct: 1, retro: "Retroalimentación: El Art. 10 inciso g) prohíbe el alcohol en establecimientos educativos." },
+            { q: "16. ¿Cuántos días de abandono de funciones en escuelas urbanas es falta grave?", options: ["a) Dos días.", "b) Hasta cinco días sin licencia.", "c) Diez días.", "d) Un mes."], correct: 1, retro: "Retroalimentación: El Art. 10 inciso h) establece este límite para áreas urbanas." },
+            { q: "17. El empleo de castigos corporales o psicológicos contra el alumno es:", options: ["a) Correctivo pedagógico.", "b) Falta grave.", "c) Falta muy grave.", "d) Permitido con autorización."], correct: 1, retro: "Retroalimentación: El Art. 10 inciso p) prohíbe toda violencia contra el alumno." },
+            { q: "18. La reincidencia voluntaria en faltas graves se tipifica como:", options: ["a) Sanción doble.", "b) Falta muy grave.", "c) Descenso de categoría.", "d) Suspensión de 90 días."], correct: 1, retro: "Retroalimentación: El Art. 11 inciso a) escala la sanción al nivel máximo." },
+            { q: "19. No rendir cuentas de dineros de rifas o kermesses es:", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Problema contable."], correct: 2, retro: "Retroalimentación: El manejo irregular de fondos es falta muy grave (Art. 11, b)." },
+            { q: "20. La venta de pruebas de exámenes o cobro por ascensos es:", options: ["a) Falta grave.", "b) Falta muy grave.", "c) Falta leve con descuento.", "d) Permitido por sindicato."], correct: 1, retro: "Retroalimentación: El Art. 11 inciso d) castiga la corrupción en evaluaciones." },
+            { q: "21. ¿Qué nivel de falta es presentarse ebrio al centro de trabajo?", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Amonestación verbal."], correct: 2, retro: "Retroalimentación: Es una de las infracciones más severas según Art. 11 inciso h)." },
+            { q: "22. La falsificación de datos en documentos oficiales es:", options: ["a) Falta grave.", "b) Falta muy grave.", "c) Falta leve.", "d) Amonestación escrita."], correct: 1, retro: "Retroalimentación: El Art. 11 (k, l) sanciona severamente la alteración de documentos." },
+            { q: "23. El acoso sexual o estupro en el ámbito educativo son:", options: ["a) Faltas graves.", "b) Faltas muy graves.", "c) Asunto solo penal.", "d) Suspensión de 15 días."], correct: 1, retro: "Retroalimentación: Se castigan con el retiro definitivo del sistema (Art. 11, m)." },
+            { q: "24. ¿Quién aplica las sanciones según el reglamento?", options: ["a) Director directamente.", "b) Tribunales disciplinarios tras proceso.", "c) Junta escolar.", "d) Asamblea sindical."], correct: 1, retro: "Retroalimentación: El Art. 12 otorga esta potestad exclusiva a los tribunales." },
+            { q: "25. ¿Cuál es una sanción permitida para faltas leves?", options: ["a) Suspensión 30 días.", "b) Amonestación escrita o descuento de 1 a 5 días.", "c) Retiro definitivo.", "d) Descenso categoría."], correct: 1, retro: "Retroalimentación: El Art. 13 inciso a) detalla estas sanciones de menor grado." },
+            { q: "26. ¿Cuál es la sanción máxima para faltas graves?", options: ["a) Descuento 5 días.", "b) Suspensión 15 a 60 días, postergación ascenso o descenso cargo.", "c) Retiro definitivo.", "d) Amonestación verbal."], correct: 1, retro: "Retroalimentación: Estas sanciones afectan directamente la carrera administrativa (Art. 13, b)." },
+            { q: "27. ¿Qué sanción corresponde a faltas muy graves?", options: ["a) Traslado forzoso.", "b) Suspensión anual.", "c) Retiro definitivo del Magisterio.", "d) Multa 50% sueldo."], correct: 2, retro: "Retroalimentación: Implica la expulsión del sistema educativo (Art. 13, c)." },
+            { q: "28. ¿Qué sucede con una sanción impuesta sin proceso legal?", options: ["a) Válida con testigos.", "b) Se tendrá por inexistente.", "c) Requiere ratificación.", "d) Se cumple y se apela."], correct: 1, retro: "Retroalimentación: El Art. 14 garantiza que toda sanción arbitraria es nula." },
+            { q: "29. ¿Cómo se componen los tribunales disciplinarios?", options: ["a) Director y dos padres.", "b) Presidente, Fiscal Promotor y Secretario-Actuario.", "c) Solo abogados externos.", "d) Tres maestros al azar."], correct: 1, retro: "Retroalimentación: Estructura formal definida en el Art. 15 del reglamento." },
+            { q: "30. ¿Dónde tiene su sede el Tribunal Nacional?", options: ["a) En cada capital.", "b) Ciudad de La Paz (conoce apelaciones).", "c) Federaciones.", "d) Sucre."], correct: 1, retro: "Retroalimentación: Es la instancia superior de revisión nacional (Art. 16)." },
+            { q: "31. ¿Quién preside el Tribunal Disciplinario Nacional?", options: ["a) Ministro.", "b) Director General de Educación.", "c) Fiscal General.", "d) Secretario Confederación."], correct: 1, retro: "Retroalimentación: La autoridad técnica nacional preside este órgano (Art. 16)." },
+            { q: "32. ¿Qué requisito profesional deben cumplir los miembros del tribunal?", options: ["a) Licenciados.", "b) Maestros-abogados de autoridad moral.", "c) 20 años de servicio.", "d) Ex-directores."], correct: 1, retro: "Retroalimentación: Se requiere la doble titulación según el Art. 18." },
+            { q: "33. ¿Cuál es el requisito de jerarquía para los miembros del tribunal?", options: ["a) Jerarquía inferior.", "b) Igual o superior a la del encauzado.", "c) Solo antigüedad.", "d) Administrativos superiores."], correct: 1, retro: "Retroalimentación: Garantía de idoneidad en el juicio (Art. 19)." },
+            { q: "34. ¿En qué caso procede una excusa o recusación?", options: ["a) Malos entendidos.", "b) Parentesco consanguíneo hasta 4to grado.", "c) Diferencia sindical.", "d) No se permiten."], correct: 1, retro: "Retroalimentación: Basado en vínculos familiares o espirituales (Art. 21)." },
+            { q: "35. ¿Quién sanciona las faltas leves?", options: ["a) Tribunal Departamental.", "b) Autoridad inmediata superior.", "c) Consejo maestros.", "d) Junta escolar."], correct: 1, retro: "Retroalimentación: El Art. 22 permite sanción directa para infracciones menores." },
+            { q: "36. ¿Ante quién se interpone una denuncia por faltas graves?", options: ["a) Policía.", "b) Autoridad inmediata superior.", "c) Sindicato.", "d) Prensa."], correct: 1, retro: "Retroalimentación: El conducto regular es el superior jerárquico (Art. 23)." },
+            { q: "37. ¿Cuál es el plazo para remitir una denuncia al tribunal?", options: ["a) 24 horas.", "b) 48 horas.", "c) 5 días.", "d) 10 días."], correct: 1, retro: "Retroalimentación: El Art. 24 exige celeridad en la remisión." },
+            { q: "38. ¿Cuánto dura el periodo probatorio?", options: ["a) 5 días.", "b) 20 días prorrogables.", "c) Un trimestre.", "d) Indefinido."], correct: 1, retro: "Retroalimentación: Plazo legal para pruebas de cargo y descargo (Art. 24, c)." },
+            { q: "39. ¿Plazo para que el tribunal dicte fallo tras las pruebas?", options: ["a) 24 horas.", "b) 5 días.", "c) 15 días.", "d) 3 días."], correct: 1, retro: "Retroalimentación: El Art. 24, e) fija este término perentorio." },
+            { q: "40. ¿De cuántos días se dispone para apelar?", options: ["a) 24 horas.", "b) 3 días tras notificación.", "c) 10 días.", "d) No hay apelación."], correct: 1, retro: "Retroalimentación: Término para interponer recurso de alzada (Art. 24, f)." },
+            { q: "41. ¿Donde se presenta el recurso de apelación?", options: ["a) Tribunal Nacional.", "b) Mismo tribunal que sentenció.", "c) Director Distrital.", "d) Corte Justicia."], correct: 1, retro: "Retroalimentación: Se presenta ante el juez de primera instancia (Art. 25)." },
+            { q: "42. ¿Plazo del Tribunal Nacional para resolver apelación?", options: ["a) 5 días.", "b) 15 días tras recepción.", "c) 30 días.", "d) Todo el año."], correct: 1, retro: "Retroalimentación: Tiempo para confirmar o revocar el fallo (Art. 26)." },
+            { q: "43. ¿Qué documento adquiere calidad de 'cosa juzgada'?", options: ["a) Acta técnica.", "b) Resolución Ministerial.", "c) Fallo departamental.", "d) Memorándum."], correct: 1, retro: "Retroalimentación: El proceso culmina con este acto administrativo máximo (Art. 27)." },
+            { q: "44. ¿Quién es el responsable de ejecutar los fallos?", options: ["a) Fiscal tribunal.", "b) Autoridades administrativas pertinentes.", "c) Padres familia.", "d) El docente."], correct: 1, retro: "Retroalimentación: Corresponde a la administración en un plazo de 3 días (Art. 28)." },
+            { q: "45. ¿Dónde se custodian los expedientes finalizados?", options: ["a) Sindicato.", "b) Archivo Ministerio Educación y Cultura.", "c) El docente.", "d) Se destruyen."], correct: 1, retro: "Retroalimentación: Obligación de registro y custodia oficial (Art. 29)." },
+            { q: "46. El descuido de alumnos en excursiones es:", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Responsabilidad padres."], correct: 1, retro: "Retroalimentación: El Art. 10 inciso q) protege al alumno en eventos externos." },
+            { q: "47. Cobrar haberes sin trabajar es:", options: ["a) Falta grave.", "b) Falta muy grave.", "c) Falta leve.", "d) Error administrativo."], correct: 1, retro: "Retroalimentación: Sancionado severamente por el Art. 11 inciso i)." },
+            { q: "48. La subalternización política de la administración es:", options: ["a) Derecho ciudadano.", "b) Falta muy grave.", "c) Falta leve.", "d) Falta grave electoral."], correct: 1, retro: "Retroalimentación: Prohíbe el uso partidario de la educación (Art. 11, ll)." },
+            { q: "49. Abandono de lugar de funciones por 7 días en 'lugares alejados' es:", options: ["a) Falta leve.", "b) Falta grave.", "c) Falta muy grave.", "d) Retiro voluntario."], correct: 1, retro: "Retroalimentación: Plazo específico para zonas rurales (Art. 10, h)." },
+            { q: "50. ¿Propósito principal de este reglamento según la RS?", options: ["a) Castigar maestros.", "b) Dotar de ordenamiento jurídico moderno acorde a la ciencia.", "c) Eliminar sindicatos.", "d) Despedir interinos."], correct: 1, retro: "Retroalimentación: La Resolución Suprema 212414 justifica así su creación." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = quizData.length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIndex) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    check(index, optIndex, li);
+                    registrarRespuesta(index, optIndex === quizData[index].correct);
+                };
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feedback = document.createElement('div');
+            feedback.id = `feedback-${index}`;
+            feedback.className = 'feedback';
+            card.appendChild(feedback);
+            container.appendChild(card);
+        });
+
+        function check(qIdx, sIdx, element) {
+            const fDiv = document.getElementById(`feedback-${qIdx}`);
+            fDiv.style.display = 'block';
+            if (sIdx === quizData[qIdx].correct) {
+                fDiv.innerText = quizData[qIdx].retro;
+                fDiv.className = 'feedback correct';
+            } else {
+                fDiv.innerText = "vuelve a analizar la pregunta";
+                fDiv.className = 'feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>

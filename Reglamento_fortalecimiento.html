@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Educación Inclusiva RM 0069/2025</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #fdf2e9; color: #1a1a1a; }
+        h1 { text-align: center; color: #a04000; border-bottom: 4px solid #a04000; padding-bottom: 10px; text-transform: uppercase; }
+        .question-card { background: #ffffff; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 8px solid #a04000; }
+        .question-text { font-size: 1.15em; font-weight: bold; margin-bottom: 15px; color: #1c2833; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; padding: 12px 18px; border: 1px solid #d5dbdb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; background: #fff; }
+        .options li:hover { background-color: #f6ddcc; border-color: #a04000; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: fadeIn 0.4s; }
+        .correct { background-color: #d4efdf; color: #145a32; border-left: 5px solid #27ae60; }
+        .incorrect { background-color: #f9ebea; color: #7b241c; border-left: 5px solid #c0392b; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Fortalecimiento de la Educación Inclusiva (RM 0069/2025)</h1>
+    <div id="quiz-container"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const quizData = [
+            { q: "1. ¿Cuál es el objeto principal del Reglamento aprobado por la RM 0069/2025?", options: ["a) Sancionar a maestros.", "b) Garantizar el acceso, permanencia y conclusión de procesos educativos.", "c) Establecer el pago de bonos.", "d) Centralizar la educación especial."], correct: 1, retro: "Retroalimentación: El Artículo 1 establece que el objeto es garantizar el acceso, permanencia y conclusión de procesos educativos de estudiantes con discapacidad, dificultades en el aprendizaje y talento extraordinario." },
+            { q: "2. ¿A qué subsistemas es de aplicación obligatoria este reglamento?", options: ["a) Solo Educación Regular.", "b) Solo Especial y Alternativa.", "c) Educación Regular, Superior y Ámbito de Educación Alternativa.", "d) Exclusivamente Escuelas de Maestros."], correct: 2, retro: "Retroalimentación: Según el Artículo 2, es obligatorio para instituciones fiscales, de convenio y privadas de los subsistemas Regular, Superior y Alternativa." },
+            { q: "3. ¿Cómo define el reglamento la 'Evaluación Multidisciplinaria'?", options: ["a) Examen escrito bimestral.", "b) Proceso de obtención y análisis de información especializada sobre el neurodesarrollo integral.", "c) Calificación de los padres.", "d) Registro de asistencia."], correct: 1, retro: "Retroalimentación: El Artículo 4a define este proceso como una valoración especializada que permite crear condiciones para el desarrollo curricular pertinente." },
+            { q: "4. ¿Quiénes son los 'Maestros de Apoyo Educativo'?", options: ["a) Estudiantes en prácticas.", "b) Profesionales responsables de orientación, asesoramiento pedagógico y sensibilización.", "c) Maestros jubilados voluntarios.", "d) Personal de limpieza."], correct: 1, retro: "Retroalimentación: El Artículo 4b establece que son responsables de equiparar y fortalecer las condiciones de acceso a los procesos educativos de aula." },
+            { q: "5. El 'Plan de Apoyo Técnico Pedagógico' se realiza entre:", options: ["a) Directores distritales.", "b) Maestro de apoyo en coordinación con maestros de aula.", "c) Padres y consejo educativo.", "d) Salud y Educación."], correct: 1, retro: "Retroalimentación: El Artículo 4c lo define como el instrumento de planificación con acciones operativas sistemáticas en favor del estudiante." },
+            { q: "6. ¿Cómo define el reglamento las 'Dificultades en el Aprendizaje'?", options: ["a) Ceguera total.", "b) Necesidades temporales o permanentes no provocadas por factores intelectuales o sensoriales.", "c) Talento extraordinario.", "d) Problemas económicos."], correct: 1, retro: "Retroalimentación: Según el Artículo 4e, son necesidades que interfieren significativamente en el rendimiento pero no tienen origen intelectual o sensorial." },
+            { q: "7. ¿Qué es el 'Diseño Plural para los Aprendizajes'?", options: ["a) Planos para rampas.", "b) Orientaciones curriculares para generar condiciones educativas accesibles a todos.", "c) Programa de becas.", "d) Uniformes de colores."], correct: 1, retro: "Retroalimentación: El Artículo 4g lo describe como un conjunto de orientaciones que alcanza a todos los estudiantes sin excluir ayudas técnicas particulares." },
+            { q: "8. ¿Qué comprende la 'Educación Inclusiva' en el Modelo Socio-comunitario?", options: ["a) Separación por diagnóstico.", "b) Política educativa que brinda respuestas oportunas a necesidades, ritmos y potencialidades.", "c) Aulas exclusivas por diagnóstico.", "d) Currículo único sin cambios."], correct: 1, retro: "Retroalimentación: El Artículo 4h la define como parte indisoluble del modelo, fundamentada en el derecho a la educación para todas y todos." },
+            { q: "9. ¿Qué sistema facilita el aprendizaje de estudiantes con discapacidad auditiva?", options: ["a) Braille.", "b) Lengua de Señas Boliviana (LSB).", "c) Código Morse.", "d) Solo castellano escrito."], correct: 1, retro: "Retroalimentación: El Artículo 4i reconoce a la LSB como un sistema lingüístico que favorece los aprendizajes." },
+            { q: "10. ¿En qué consiste la 'Trayectoria Educativa'?", options: ["a) Promedio de notas.", "b) Historial secuencial, cronológico e individual del recorrido educativo.", "c) Lista de colegios.", "d) Registro de vacunas."], correct: 1, retro: "Retroalimentación: El Artículo 4j establece que es el historial registrado en un Archivo Personal con potencialidades, logros y recomendaciones." },
+            { q: "11. ¿Cuál es una de las finalidades del reglamento sobre las comunidades educativas?", options: ["a) Pagar salarios extras.", "b) Que asuman compromiso y conciencia en la consolidación de la Inclusión.", "c) Impedir ingreso de padres.", "d) Aprender LSB obligatoriamente."], correct: 1, retro: "Retroalimentación: El Artículo 5b busca que la sociedad civil asuma compromiso en el apoyo educativo a estudiantes con discapacidad." },
+            { q: "12. Sobre las inscripciones, ¿qué criterio es mandatorio?", options: ["a) Presentar carnet de discapacidad.", "b) Inscripción independiente de condiciones de neurodesarrollo o sociales.", "c) Prueba de admisión previa.", "d) Derivación obligatoria previa."], correct: 1, retro: "Retroalimentación: El Artículo 6a prohíbe la discriminación en la inscripción por cualquier condición de neurodesarrollo o personal." },
+            { q: "13. ¿Es obligatorio estar inscrito en Educación Especial para entrar a Regular?", options: ["a) Sí, es requisito.", "b) No es pre-requisito; se permite la inscripción simultánea.", "c) Solo por discapacidad física.", "d) Solo en nivel superior."], correct: 1, retro: "Retroalimentación: El Artículo 6b permite la inscripción simultánea con el mismo código RUDE para recibir apoyo educativo." },
+            { q: "14. Diferencia de edad permitida para inscripción en Discapacidad Intelectual:", options: ["a) Ninguna.", "b) Hasta 24 meses previa evaluación multidisciplinaria.", "c) Hasta 10 años.", "d) Según dominio de lectura."], correct: 1, retro: "Retroalimentación: El Artículo 6d establece este límite de edad con relación a sus pares basado en el informe técnico." },
+            { q: "15. Obligación de la unidad de origen ante un traslado:", options: ["a) Cobrar multa.", "b) Remitir obligatoriamente el archivo de trayectoria educativa.", "c) Destruir expediente.", "d) Retener documentos."], correct: 1, retro: "Retroalimentación: El Artículo 7a obliga a la unidad de origen a remitir la trayectoria educativa a la institución destinataria." },
+            { q: "16. ¿Qué debe incorporarse progresivamente en el Proyecto Educativo?", options: ["a) Nuevos uniformes.", "b) El 'Diseño Plural para los Aprendizajes' en todos sus componentes.", "c) Reglas de disciplina.", "d) Idiomas extranjeros."], correct: 1, retro: "Retroalimentación: El Artículo 8a instruye la incorporación progresiva de este diseño en la planificación curricular." },
+            { q: "17. ¿Quién planifica y monitorea las disposiciones en cada departamento?", options: ["a) Ministerio de Salud.", "b) Direcciones Departamentales de Educación (DDE).", "c) Alcaldes locales.", "d) Juntas escolares."], correct: 1, retro: "Retroalimentación: El Artículo 10 establece que las DDE a través de sus subdirecciones son responsables de monitorear el reglamento." },
+            { q: "18. Responsabilidad de las Direcciones Distritales Educativas:", options: ["a) Contratar maestros.", "b) Desarrollar procesos de seguimiento para garantizar el apoyo educativo.", "c) Comprar materiales.", "d) Dictar clases."], correct: 1, retro: "Retroalimentación: El Artículo 11a les asigna la función de seguimiento a centros para garantizar la inclusión." },
+            { q: "19. Los directores de instituciones regulares deben:", options: ["a) Rechazar si hay muchos alumnos.", "b) Viabilizar infraestructura bajo enfoque de 'Usos Universales'.", "c) Dar clases de apoyo.", "d) Prohibir entrada al apoyo."], correct: 1, retro: "Retroalimentación: El Artículo 12f responsabiliza a los directores por gestionar la eliminación de barreras arquitectónicas." },
+            { q: "20. ¿Qué deben proporcionar los directores al maestro de apoyo?", options: ["a) Salario en efectivo.", "b) Planificaciones curriculares e institucionales.", "c) Llave del colegio.", "d) Registro de notas total."], correct: 1, retro: "Retroalimentación: El Artículo 12i obliga a facilitar la planificación para fines de apoyo técnico pedagógico." },
+            { q: "21. Responsabilidad fundamental del maestro de aula:", options: ["a) Enseñanza sin cambios.", "b) Desarrollar planificación y procesos accesibles (Diseño Plural).", "c) Que el padre enseñe.", "d) Aprobación por pena."], correct: 1, retro: "Retroalimentación: El Artículo 13a instruye desarrollar procesos educativos accesibles según las potencialidades detectadas." },
+            { q: "22. La evaluación del estudiante incluido debe aplicar:", options: ["a) Exámenes únicos.", "b) Estrategias, instrumentos y materiales adecuados.", "c) Aprobación automática.", "d) Solo califica el apoyo."], correct: 1, retro: "Retroalimentación: El Artículo 13d indica que la evaluación debe ser coherente con las adaptaciones realizadas." },
+            { q: "23. Los estudiantes sin necesidades educativas deben:", options: ["a) Solo estudiar.", "b) Promover acciones contra violencia, acoso y bullying.", "c) Calificar exámenes.", "d) Donar materiales."], correct: 1, retro: "Retroalimentación: El Artículo 14b promueve el respeto a la individualidad y la prevención del bullying por parte de todos." },
+            { q: "24. Los padres de familia son responsables de:", options: ["a) Dictar temas.", "b) Apoyar y orientar para generar condiciones favorables.", "c) Comprar equipamiento.", "d) Decidir currículo."], correct: 1, retro: "Retroalimentación: El Artículo 15a establece la corresponsabilidad familiar en el proceso educativo." },
+            { q: "25. Si detectan señales de alerta, los padres pueden solicitar:", options: ["a) Despido del maestro.", "b) Aplicación de pruebas de detección o evaluación especializada.", "c) Pase automático.", "d) Cambio de director."], correct: 1, retro: "Retroalimentación: El Artículo 15c otorga a los padres el derecho de solicitar evaluaciones ante sospechas de dificultad." },
+            { q: "26. Función del Director de Educación Especial en modalidad indirecta:", options: ["a) Inscripción centralizada.", "b) Organizar y planificar acciones de los maestros de apoyo.", "c) Clases en regular.", "d) Cobro de pensiones."], correct: 1, retro: "Retroalimentación: El Artículo 16a le asigna la organización técnica pedagógica de los maestros de apoyo." },
+            { q: "27. El maestro de apoyo debe trasladarse:", options: ["a) Solo a capitales.", "b) Periódicamente a las instituciones donde están sus estudiantes.", "c) Solo bajo invitación.", "d) Una vez al año."], correct: 1, retro: "Retroalimentación: El Artículo 17f establece el traslado periódico según planificación autorizada." },
+            { q: "28. Frecuencia para presentar fichas de seguimiento:", options: ["a) Anual.", "b) Último día hábil de cada mes.", "c) Solo ante problemas.", "d) Trimestral."], correct: 1, retro: "Retroalimentación: El Artículo 17g exige informes mensuales de asistencia y reportes técnicos." },
+            { q: "29. El personal administrativo debe:", options: ["a) Ser licenciados.", "b) Capacitarse para un trato de respeto con calidez.", "c) No capacitarse.", "d) Solo primeros auxilios."], correct: 1, retro: "Retroalimentación: El Artículo 18 instruye capacitación progresiva para garantizar convivencia comunitaria." },
+            { q: "30. El apoyo en discapacidad auditiva requiere manejo de:", options: ["a) Carpintería.", "b) Lengua de Señas Boliviana (LSB).", "c) Inglés técnico.", "d) Música clásica."], correct: 1, retro: "Retroalimentación: El Artículo 19a exige un alto nivel de conocimiento y manejo de la LSB." },
+            { q: "31. Objetivo de la interpretación de LSB en educación:", options: ["a) Profesionalizar al maestro.", "b) Eliminar barreras de comunicación para transmitir contenidos accesibles.", "c) Traducción literal.", "d) Hacer videos."], correct: 1, retro: "Retroalimentación: El Artículo 22 busca garantizar acceso claro evitando la incoherencia en el mensaje." },
+            { q: "32. Vestimenta del intérprete de LSB:", options: ["a) Joyas vistosas.", "b) Adecuada, cómoda y sin distractores visuales.", "c) Uniforme militar.", "d) Cabello suelto."], correct: 1, retro: "Retroalimentación: El Artículo 23 prohíbe joyas o colores distractores por respeto a la cultura sorda." },
+            { q: "33. Función específica del apoyo en discapacidad auditiva:", options: ["a) Hacer la tarea.", "b) Explicar palabras nuevas y abstractas mediante ejemplificación en LSB.", "c) Sancionar compañeros.", "d) Traducir al aymara."], correct: 1, retro: "Retroalimentación: El Artículo 24e le asigna la tarea de contextualizar conceptos nuevos en señas." },
+            { q: "34. Aptitud básica requerida para el apoyo auditivo:", options: ["a) Conocimiento del enfoque inclusivo para sensibilización.", "b) Voz fuerte.", "c) Reparar prótesis.", "d) Ser sordo."], correct: 0, retro: "Retroalimentación: El Artículo 25 destaca la capacidad de guiar y evaluar acciones de sensibilización." },
+            { q: "35. Apoyo visual debe transcribir formato tinta a:", options: ["a) Código barras.", "b) Sistema Braille o viceversa.", "c) Taquigrafía.", "d) Solo audio."], correct: 1, retro: "Retroalimentación: El Artículo 27 establece la transcripción a Braille como competencia fundamental." },
+            { q: "36. Respecto a la tiflología, el maestro debe:", options: ["a) Solo usar papel.", "b) Experiencia en innovaciones tiflológicas y tiflotécnicas.", "c) Vender máquinas.", "d) Solo usar bastón."], correct: 1, retro: "Retroalimentación: El Artículo 28e requiere experiencia en investigación e innovación en esta área." },
+            { q: "37. ¿A quiénes sensibiliza el apoyo en salud visual?", options: ["a) Solo ciegos.", "b) Maestros, administrativos, servicio y padres.", "c) Solo médicos.", "d) Solo ópticos."], correct: 1, retro: "Retroalimentación: El Artículo 30e busca la convivencia armónica de toda la comunidad." },
+            { q: "38. Estrategia pedagógica en discapacidad visual:", options: ["a) Elementos brillantes.", "b) Elementos sonoros, relieve, macrotipo y contraste.", "c) Videos sin audio.", "d) Solo dibujo."], correct: 1, retro: "Retroalimentación: El Artículo 31a prioriza estrategias accesibles a la condición visual." },
+            { q: "39. Formación en Discapacidad Intelectual requiere:", options: ["a) Título primaria.", "b) Formación post-gradual inherente al área.", "c) Psicología básica.", "d) Paciencia."], correct: 1, retro: "Retroalimentación: El Artículo 32 exige especialización continua en el área de atención." },
+            { q: "40. Informe necesario para inclusión intelectual en regular:", options: ["a) Buena conducta.", "b) Informe de evaluación integral multidisciplinario.", "c) Compromiso de silencio.", "d) CI > 120."], correct: 1, retro: "Retroalimentación: El Artículo 33b establece que este informe decide el recorrido más pertinente." },
+            { q: "41. Apoyo a estudiantes con Autismo (TEA) se garantiza si:", options: ["a) Severidad intelectual.", "b) Sin compromiso intelectual ni trastornos funcionales del lenguaje.", "c) Solo en artes.", "d) Con título previo."], correct: 1, retro: "Retroalimentación: El Artículo 37 especifica este perfil para el apoyo en la modalidad indirecta." },
+            { q: "42. Función del maestro de aula ante el autismo:", options: ["a) Dejarlo solo.", "b) Desarrollar detección temprana de señales de alerta.", "c) Impedir apoyo.", "d) Nota 100 gratis."], correct: 1, retro: "Retroalimentación: El Artículo 39a le asigna la detección oportuna de señales en los primeros niveles." },
+            { q: "43. Énfasis preventivo en dificultades de aprendizaje:", options: ["a) Secundaria.", "b) 1ro, 2do y 3ro de Primaria.", "c) Superior técnica.", "d) Solo inicial."], correct: 1, retro: "Retroalimentación: El Artículo 41 prioriza los primeros grados de primaria para la intervención." },
+            { q: "44. Guía aplicada ante riesgo de dificultades de aprendizaje:", options: ["a) Faltas y sanciones.", "b) Guía de Observación - Detección de Signos de Riesgo.", "c) Primeros auxilios.", "d) Ninguna."], correct: 1, retro: "Retroalimentación: El Artículo 44c instruye el uso de este instrumento para la derivación técnica." },
+            { q: "45. Identificación de Talento Extraordinario mediante:", options: ["a) Concurso.", "b) Evaluación psicológica/psicopedagógica multidisciplinaria.", "c) Recomendación verbal.", "d) Notas más altas."], correct: 1, retro: "Retroalimentación: El Artículo 49 exige el uso de pruebas e instrumentos estandarizados." },
+            { q: "46. Institución garante de mobiliario adecuado:", options: ["a) Padres.", "b) Gobiernos Autónomos Municipales.", "c) Sindicato.", "d) Privados."], correct: 1, retro: "Retroalimentación: El Artículo 54 asigna esta responsabilidad a los municipios según Ley 070." },
+            { q: "47. Ubicación del aula para discapacidad físico-motora:", options: ["a) 3er piso.", "b) Proximidad a puerta principal y baños.", "c) Sótano.", "d) Lejos de otros."], correct: 1, retro: "Retroalimentación: El Artículo 53 garantiza accesibilidad inmediata a servicios básicos." },
+            { q: "48. Relación docente-estudiante en apoyo auditivo:", options: ["a) > 20 alumnos.", "b) > 4 alumnos.", "c) No aplica.", "d) 1 alumno."], correct: 1, retro: "Retroalimentación: El cuadro del Artículo 55 define esta relación para la optimización del servicio." },
+            { q: "49. Dependencia administrativa de maestros de apoyo:", options: ["a) Unidad regular.", "b) Centro de Educación Especial (CEE).", "c) Vecinos.", "d) Min. Trabajo."], correct: 1, retro: "Retroalimentación: El Artículo 56a establece que dependen directamente de los CEE." },
+            { q: "50. ¿Este reglamento modifica el Escalafón Docente?", options: ["a) Sí, nuevas categorías.", "b) No modifican el Escalafón docente.", "c) Solo antigüedad.", "d) Solo en superior."], correct: 1, retro: "Retroalimentación: La Disposición Final Segunda aclara que la estructura del escalafón se mantiene intacta." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = quizData.length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIdx) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    const feedback = document.getElementById(`feed-${index}`);
+                    feedback.style.display = 'block';
+                    if (optIdx === item.correct) {
+                        registrarRespuesta(index, true);
+                        feedback.innerText = item.retro;
+                        feedback.className = 'feedback correct';
+                    } else {
+                        registrarRespuesta(index, false);
+                        feedback.innerText = "vuelve a analizar la pregunta";
+                        feedback.className = 'feedback incorrect';
+                    }
+                };
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.id = `feed-${index}`;
+            feedbackDiv.className = 'feedback';
+            card.appendChild(feedbackDiv);
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

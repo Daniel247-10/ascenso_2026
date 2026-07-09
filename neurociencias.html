@@ -12,7 +12,7 @@
     <p class="subtitle">Cuestionario sobre neurociencias y neuroaprendizaje</p>
 
     <div id="questions-container"></div>
-    <div id="score-container">Aciertos actuales: 0 / 100</div>
+    <div id="score-container">Aciertos actuales: 0 / 100 | Porcentaje: 0.00%</div>
     <div id="acciones-finales" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
         <a href="index.html" class="btn">Volver al menú</a>
         <button type="button" onclick="mostrarIncorrectas()">ver preguntas incorrecta</button>
@@ -156,7 +156,8 @@
                 aciertos++;
             }
         }
-        document.getElementById('score-container').innerHTML = `Aciertos actuales: ${aciertos} / ${bancoPreguntas.length}`;
+        const porcentaje = bancoPreguntas.length ? (aciertos / bancoPreguntas.length) * 100 : 0;
+        document.getElementById('score-container').innerHTML = `Aciertos actuales: ${aciertos} / ${bancoPreguntas.length} | Porcentaje: ${porcentaje.toFixed(2)}%`;
     }
 
     function mostrarIncorrectas() {

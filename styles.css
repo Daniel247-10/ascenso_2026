@@ -123,6 +123,13 @@ p {
   color: var(--primary-dark);
 }
 
+.question-text {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
 .question-block {
   margin-bottom: 24px;
   padding: 18px;
@@ -135,6 +142,22 @@ p {
 .options {
   display: grid;
   gap: 8px;
+}
+
+.options li {
+  list-style: none;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fff;
+  transition: 0.2s ease;
+}
+
+.options li:hover {
+  border-color: var(--primary-color);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
 }
 
 .options label,
@@ -225,7 +248,8 @@ a:hover {
 .theme-card-content h2 {
   margin: 0 0 8px;
   font-size: 1.15rem;
-  color: var(--primary-dark);
+  color: var(--error-color);
+  text-align: center;
 }
 
 .theme-card-content p {

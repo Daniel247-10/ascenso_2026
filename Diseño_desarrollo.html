@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Ascenso - Diseño y Desarrollo Curricular</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Examen de Ascenso de Categoría</h1>
+        <p class="subtitle">Responde cada pregunta y revisa la retroalimentación para reforzar tus conocimientos.</p>
+        <div id="quiz-container"></div>
+        <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="btn">Volver al menú</a>
+    </nav>
+
+    <script>
+        const questions = [
+            { q: "1. ¿Cómo se define el currículum en su origen según las fuentes?", options: ["a) Como un conjunto de actividades extracurriculares.", "b) Como el territorio acotado y regulado del conocimiento que representa los contenidos a desarrollar.", "c) Como la suma de experiencias personales del docente.", "d) Como un documento administrativo sin valor pedagógico."], correct: 1, retro: "Retroalimentación: El currículum es una selección regulada de contenidos que organiza la práctica didáctica." },
+            { q: "2. El periodo de educación obligatoria se caracteriza por ser:", options: ["a) Selectivo y excluyente.", "b) Universal, garantizando una educación básica y común para todos.", "c) Exclusivo para estudiantes con altas capacidades cognitivas.", "d) Opcional según el nivel económico de la familia."], correct: 1, retro: "Retroalimentación: La educación obligatoria prioriza el ideal de inclusión y la justicia social." },
+            { q: "3. ¿Cuál es el ámbito de diseño curricular donde se toman decisiones sobre la cultura que se transmite y los contenidos obligatorios?", options: ["a) Ámbito del centro.", "b) Ámbito del aula.", "c) Ámbito político.", "d) Ámbito comunitario."], correct: 2, retro: "Retroalimentación: En este nivel se define el currículum básico o común (core curriculum)." },
+            { q: "4. Según Gimeno Sacristán, ¿qué función cumple el currículum al establecer \"grados\"?", options: ["a) Separar a los alumnos por su origen social.", "b) Facilitar la transición ordenada a lo largo de la escolaridad, asociando contenidos y edades.", "c) Eliminar la necesidad de evaluación.", "d) Fomentar la competencia desleal entre pares."], correct: 1, retro: "Retroalimentación: Los grados ordenan el tiempo escolar y proporcionan coherencia vertical al progreso del alumno." },
+            { q: "5. ¿Qué es el \"currículum oculto\" según Philippe Perrenoud?", options: ["a) El plan de estudios oficial publicado por el Estado.", "b) El conjunto de aprendizajes y normas que se transmiten de forma implícita en la vida escolar.", "c) Los libros de texto que no se utilizan en clase.", "d) La planificación que el docente guarda para sí mismo."], correct: 1, retro: "Retroalimentación: Designa una acción de la escuela que contribuye a interiorizar el orden social y moral sin figurar en los planes oficiales." },
+            { q: "6. ¿Cuál es la principal crítica pedagógica al uso monopólico del libro de texto?", options: ["a) Que es demasiado caro para las familias.", "b) Que reduce drásticamente las funciones y materiales de lectura, limitando la experiencia cultural.", "c) Que no contiene imágenes atractivas.", "d) Que los docentes no saben cómo leerlos."], correct: 1, retro: "Retroalimentación: El libro de texto actúa como el último reductor de la experiencia humana en las aulas." },
+            { q: "7. El modelo de \"Escuela Comprensiva\" se define como aquel que:", options: ["a) Clasifica a los alumnos por niveles de inteligencia desde el ingreso.", "b) Mantiene a todos los estudiantes juntos en un tronco común, sin segregarlos por especialidades de forma temprana.", "c) Ofrece currículos distintos según la clase social.", "d) Solo admite a estudiantes que superan pruebas de excelencia."], correct: 1, retro: "Retroalimentación: Este modelo favorece la mezcla social y retrasa la elección de vías diferenciadas para promover la igualdad." },
+            { q: "8. ¿Qué significa aprender el \"oficio de alumno\"?", options: ["a) Estudiar para ser profesor en el futuro.", "b) Adquirir códigos, costumbres y actitudes para sobrevivir y tener éxito en la organización escolar.", "c) Aprender una profesión técnica en la escuela primaria.", "d) Memorizar el reglamento interno de la unidad educativa."], correct: 1, retro: "Retroalimentación: Tener éxito en la escuela supone aprender las reglas del juego de la institución." },
+            { q: "9. ¿A qué se refiere el criterio \"epistemológico\" en la selección de contenidos?", options: ["a) Al nivel de madurez del estudiante.", "b) Al carácter de cada ciencia y a cómo deben presentarse los distintos tipos de conocimiento.", "c) A la utilidad social del contenido en el barrio.", "d) A la preparación del profesorado."], correct: 1, retro: "Retroalimentación: Implica cuestionar si la materia debe presentarse en sus aspectos metodológicos o como resumen de avances científicos." },
+            { q: "10. Según las fuentes, el \"fracaso escolar\" debe entenderse como:", options: ["a) La incapacidad natural de ciertos niños para aprender.", "b) El fracaso de la institución para dar acogida a la diversidad y la heterogeneidad de los sujetos.", "c) Un problema exclusivamente familiar.", "d) La falta de voluntad del estudiante por el estudio."], correct: 1, retro: "Retroalimentación: Es una lacra interna que delata la capacidad del sistema para manejar la diferencia." },
+            { q: "11. ¿Qué propone la \"Globalización\" como forma de organizar el contenido (Decroly)?", options: ["a) Estudiar temas internacionales únicamente.", "b) Adecuar el conocimiento al modo de pensar sincrético de los niños a través de centros de interés.", "c) Eliminar los libros de texto de las escuelas.", "d) Enseñar todo en un solo día de clase."], correct: 1, retro: "Retroalimentación: Se basa en organizar las temáticas según las necesidades e intereses infantiles." },
+            { q: "12. La \"Interdisciplinariedad\" consiste en:", options: ["a) La suma de asignaturas sin conexión alguna.", "b) La relación de conocimientos de distintas materias para construir un conocimiento nuevo y relevante.", "c) Que un solo profesor dicte todas las materias en secundaria.", "d) Dictar apuntes de varios libros a la vez."], correct: 1, retro: "Retroalimentación: Presenta el conocimiento de forma global para resolver problemas complejos." },
+            { q: "13. ¿Cuál es un aprendizaje derivado de la \"vida en masa\" en la escuela?", options: ["a) El desarrollo de la creatividad absoluta.", "b) La capacidad de aislarse, tolerar interrupciones y tener paciencia ante la falta de privacidad.", "c) El dominio de tres idiomas extranjeros.", "d) La especialización en informática."], correct: 1, retro: "Retroalimentación: El alumno aprende a vivir rodeado siempre de personas y a esperar su turno." },
+            { q: "14. El currículum realizado o \"en la acción\" ocurre en el ámbito de:", options: ["a) El Ministerio de Educación.", "b) El Aula.", "c) El Consejo Técnico departamental.", "d) La Dirección Distrital."], correct: 1, retro: "Retroalimentación: El aula es el lugar donde el método y la cultura seleccionada se hacen reales." },
+            { q: "15. ¿Qué implica evaluar por \"competencias\" según el enfoque de PISA?", options: ["a) Pedir al alumno que repita de memoria lo que dice el libro.", "b) Evaluar la capacidad del alumno para aplicar conocimientos en situaciones reales y complejas.", "c) Tomar exámenes de opción múltiple todos los días.", "d) Comparar las notas de los alumnos para ver quién es el mejor."], correct: 1, retro: "Retroalimentación: Ser competente es ser capaz de resolver problemas reales que no han sido previamente memorizados." },
+            { q: "16. ¿Qué función cumple la \"graduación\" de la enseñanza?", options: ["a) Otorgar títulos de bachiller únicamente.", "b) Clasificar a los estudiantes en fases y tramos ordenados por edad y complejidad de contenidos.", "c) Fomentar la creatividad individual sin límites.", "d) Evitar que los niños jueguen en el recreo."], correct: 1, retro: "Retroalimentación: Establece una progresión escolar que regula el ritmo de aprendizaje de sujetos desiguales." },
+            { q: "17. El \"sentido común\" que se adquiere en la escuela es:", options: ["a) Un conjunto de esquemas de pensamiento compartidos que se dan por sentados como evidentes.", "b) La capacidad de leer y escribir perfectamente.", "c) El conocimiento científico avanzado.", "d) El respeto a los símbolos patrios exclusivamente."], correct: 0, retro: "Retroalimentación: La escuela ayuda a formar las rutinas intelectuales gracias a las cuales vemos la realidad como indiscutible." },
+            { q: "18. ¿Por qué se dice que el currículum es un \"contenedor no neutro\"?", options: ["a) Porque los libros de texto son de colores.", "b) Porque impone reglas, normas y un orden que estructuran la vida escolar y el modelo de individuo.", "c) Porque solo contiene información científica pura.", "d) Porque no tiene influencia en el comportamiento del alumno."], correct: 1, retro: "Retroalimentación: El currículum regula tiempos, actividades y procesos, definiendo lo que es \"normal\"." },
+            { q: "19. Según Howard Gardner, la escuela tradicional suele privilegiar solo dos inteligencias, ¿cuáles son?", options: ["a) Musical y Espacial.", "b) Lingüística y Lógico-matemática.", "c) Intrapersonal y Naturalista.", "d) Cinética y Corporal."], correct: 1, retro: "Retroalimentación: La escuela entroniza estas dos como las únicas formas válidas de inteligencia, ignorando otras." },
+            { q: "20. ¿Qué se entiende por \"currículum evaluado\"?", options: ["a) El plan que el docente entrega al director al inicio del año.", "b) El constituido por los contenidos exigidos en las pruebas de evaluación que representan la dimensión visible del aprendizaje.", "c) Las notas finales que se envían al Ministerio.", "d) La opinión de los padres sobre el profesor."], correct: 1, retro: "Retroalimentación: Refleja lo que el sistema realmente valora como éxito o fracaso." },
+            { q: "21. El criterio \"psicológico\" en el currículum sirve para:", options: ["a) Castigar a los alumnos con mal comportamiento.", "b) Organizar y secuenciar contenidos respetando el nivel de desarrollo del alumno y buscando aprendizajes significativos.", "c) Decidir qué profesores contratar.", "d) Medir la estatura de los estudiantes."], correct: 1, retro: "Retroalimentación: Es esencial para que el contenido sea asimilable según la madurez del sujeto." },
+            { q: "22. ¿Cuál es el riesgo de un currículum \"sobrecargado\" de materias?", options: ["a) Que los alumnos aprendan demasiado.", "b) La fragmentación del conocimiento y la dificultad para profundizar en temas relevantes.", "c) Que los docentes tengan mucho tiempo libre.", "d) Que los libros de texto sean muy delgados."], correct: 1, retro: "Retroalimentación: La segmentación en muchas asignaturas impide desarrollar un pensamiento analítico profundo." },
+            { q: "23. ¿Qué caracteriza a una \"situación de investigación\" en el aula?", options: ["a) Que el alumno copie un texto de la pizarra.", "b) Que el alumno se enfrente a un problema sin respuesta única, activando su curiosidad y reflexión.", "c) Que el profesor dicte una lección magistral.", "d) Que se tome un examen sorpresa."], correct: 1, retro: "Retroalimentación: Trabajar bien en estas tareas implica usar método, perseverancia e imaginación." },
+            { q: "24. El término \"currículum\" procede del latín cursus y significa:", options: ["a) Lista de temas.", "b) Carrera o recorrido del estudiante.", "c) Documento oficial.", "d) Salón de clases."], correct: 1, retro: "Retroalimentación: Se refiere al recorrido de vida y estudios que el alumno debe superar." },
+            { q: "25. ¿Cuál es la \"miseria\" del libro de texto según Gimeno Sacristán?", options: ["a) Su bajo costo de impresión.", "b) Que suele ser la única fuente de información, fomentando una pedagogía conservadora y pasiva.", "c) Que tiene demasiadas páginas.", "d) Que no incluye ejercicios de matemáticas."], correct: 1, retro: "Retroalimentación: Su monopolio empobrece la cultura escolar al evitar otras fuentes como la biblioteca o Internet." },
+            { q: "26. En la \"Pedagogía Transmisiva\", el aprendizaje se reduce a:", options: ["a) La construcción colectiva del saber.", "b) La absorción y memorización de información externa.", "c) El juego y la diversión constante.", "d) La investigación científica avanzada."], correct: 1, retro: "Retroalimentación: Se considera que el conocimiento existe fuera de la conciencia y el alumno debe solo \"llenarse\" de él." },
+            { q: "27. ¿Qué es la \"individualización\" como estrategia curricular?", options: ["a) Dejar que cada alumno haga lo que quiera.", "b) Adaptar la enseñanza a las condiciones y ritmos de cada estudiante para que todos logren provecho.", "c) Separar a los alumnos con problemas en aulas especiales para siempre.", "d) No dar clases grupales nunca más."], correct: 1, retro: "Retroalimentación: Requiere una pedagogía de la complejidad donde las tareas sean retadoras para todos." },
+            { q: "28. Los \"Proyectos de Centro\" permiten:", options: ["a) Que cada profesor trabaje de forma aislada.", "b) Dotar al establecimiento de estrategias y culturas comunes para dar coherencia a la trayectoria del alumno.", "c) Aumentar la burocracia escolar sin sentido.", "d) Eliminar las materias obligatorias del Estado."], correct: 1, retro: "Retroalimentación: Es el marco idóneo para plantear innovaciones y mejora coordinada." },
+            { q: "29. ¿Qué relación hay entre \"enseñanza\" y \"aprendizaje\"?", options: ["a) Son exactamente lo mismo.", "b) La enseñanza no garantiza el aprendizaje; este último depende de la experiencia y construcción del sujeto.", "c) El aprendizaje solo ocurre si el profesor dicta apuntes.", "d) La enseñanza es secundaria, lo importante es solo el examen."], correct: 1, retro: "Retroalimentación: La validez de la enseñanza se encuentra en su prueba de contraste, que es el aprendizaje logrado." },
+            { q: "30. El concepto de \"Diversidad\" en la escuela debe:", options: ["a) Ser eliminado para que todos sean iguales.", "b) Ser respetado y estimulado como una riqueza natural, evitando que se convierta en desigualdad.", "c) Ignorarse por completo en la planificación.", "d) Usarse para clasificar a los alumnos en \"buenos\" y \"malos\"."], correct: 1, retro: "Retroalimentación: La diferencia es lo normal; el resto es conciliarla con el currículum común." },
+            { q: "31. ¿Qué es la \"transposición pragmática\"?", options: ["a) Traducir el currículum de un idioma a otro.", "b) Convertir el currículum formal en tareas y actividades reales de trabajo en clase.", "c) Cambiar los horarios de los profesores.", "d) Comprar nuevos materiales escolares."], correct: 1, retro: "Retroalimentación: Es el proceso por el cual el plan de estudios se vuelve acción real y negociación entre docente y alumnos." },
+            { q: "32. ¿Qué significa que un alumno sea un \"perfecto indígena\" de la organización?", options: ["a) Que pertenece a una nación originaria.", "b) Que ha asimilado perfectamente la cultura interna y las reglas de supervivencia de la escuela.", "c) Que habla idiomas nativos.", "d) Que no conoce la tecnología moderna."], correct: 1, retro: "Retroalimentación: Se refiere a la asimilación del oficio de alumno para funcionar en la institución." },
+            { q: "33. La \"escuela a la medida\" (Claparède) se basa en:", options: ["a) Un currículum rígido para todos por igual.", "b) Tomar en cuenta las aptitudes, capacidades y niveles de desarrollo de cada niño.", "c) Uniformes escolares hechos por sastres.", "d) Edificios escolares pequeños."], correct: 1, retro: "Retroalimentación: Reconoce que cada niño tiene su propia naturaleza y debe ser tratado conforme a ella." },
+            { q: "34. ¿Por qué la evaluación formal suele ser \"reproducir lo ya hecho\"?", options: ["a) Porque el profesor no tiene tiempo de inventar nada.", "b) Porque invita al alumno a rehacer ejercicios y temas ya trabajados en las lecciones rutinarias.", "c) Porque los alumnos no saben pensar.", "d) Porque los exámenes son siempre los mismos cada año."], correct: 1, retro: "Retroalimentación: La evaluación formal es, en gran medida, una comprobación de que se ha seguido el trabajo escolar regular." },
+            { q: "35. ¿Qué es la \"Inteligencia Interpersonal\"?", options: ["a) La capacidad de entenderse a uno mismo.", "b) La habilidad para liderar, organizar, comunicar y resolver conflictos con otros.", "c) El talento para la música y el ritmo.", "d) El talento para la naturaleza."], correct: 1, retro: "Retroalimentación: Implica relacionarse productivamente y cooperar en equipos." },
+            { q: "36. La \"Escuela Pública\" se considera un instrumento de:", options: ["a) Selección de las élites.", "b) Justicia social e igualdad de oportunidades para toda la diversidad social.", "c) Control ideológico estricto.", "d) Formación solo para el trabajo manual."], correct: 1, retro: "Retroalimentación: Es el modelo históricamente más integrador de las diferencias sociales y culturales." },
+            { q: "37. ¿Qué papel juega la \"paciencia\" en el currículum oculto?", options: ["a) Es una virtud religiosa.", "b) Es un aprendizaje necesario para tolerar el aburrimiento, la espera y la pasividad en el aula.", "c) No tiene ninguna importancia.", "d) Es lo que el profesor necesita para no enojarse."], correct: 1, retro: "Retroalimentación: En la escuela se aprende a \"matar el tiempo\" y a diferir los deseos personales." },
+            { q: "38. Un currículum \"real\" es el resultado de:", options: ["a) Solo lo que dice la ley.", "b) La negociación y confrontación diaria de estrategias entre el maestro y sus alumnos.", "c) Lo que los padres quieren que se enseñe.", "d) Únicamente lo que dice el libro de texto."], correct: 1, retro: "Retroalimentación: El docente no es dueño absoluto de la situación; debe adaptarse a la respuesta del grupo." },
+            { q: "39. ¿Cuál es el riesgo de la \"fragmentación\" del tiempo escolar (horas de 45-50 min)?", options: ["a) Que los alumnos descansen mucho.", "b) Que se impida profundizar en tareas complejas y se genere un despropósito de actividades inconexas.", "c) Que los profesores no puedan cobrar su sueldo.", "d) Que se acabe el día muy rápido."], correct: 1, retro: "Retroalimentación: La excesiva división horaria obliga a cambios de actividad que cortan los procesos de reflexión profunda." },
+            { q: "40. ¿Qué se busca al seleccionar contenidos \"socio-ideológicos\"?", options: ["a) Imponer una sola idea política.", "b) Canalizar la cultura social y transmitir visiones sobre la realidad que incluyan valores y diversidad.", "c) Enseñar solo historia antigua.", "d) Evitar que los niños hablen en clase."], correct: 1, retro: "Retroalimentación: Los contenidos son un cauce para transmitir visiones del mundo y construir la identidad social." },
+            { q: "41. ¿Qué es el \"aprendizaje significativo\"?", options: ["a) Aprender datos de memoria para el examen.", "b) Conectar la nueva información con los conocimientos previos y la realidad del estudiante.", "c) Seguir las órdenes del profesor sin preguntar.", "d) Obtener la nota máxima en todas las materias."], correct: 1, retro: "Retroalimentación: Requiere un esfuerzo del alumno por dar sentido a lo que aprende." },
+            { q: "42. La \"Autonomía de los Centros\" sirve para:", options: ["a) Que cada escuela ignore las leyes nacionales.", "b) Generar cambios e innovaciones propias basadas en el contexto específico de sus alumnos.", "c) Cobrar mensualidades más altas.", "d) Cerrar la escuela cuando el director quiera."], correct: 1, retro: "Retroalimentación: Permite articular el trabajo docente mediante estrategias colaborativas." },
+            { q: "43. ¿Qué caracteriza a las \"Competencias Metacurriculares\" (DeSeCo)?", options: ["a) Aprender solo matemáticas y lenguaje.", "b) Habilidades como interaccionar efectivamente, cooperar en equipos y controlar la propia vida.", "c) Saber usar el martillo y el serrucho.", "d) Conocer la capital de todos los países."], correct: 1, retro: "Retroalimentación: Contribuyen a resultados valorados tanto para la sociedad como para la realización personal." },
+            { q: "44. El \"habitus cultivado\" que produce la escuela es:", options: ["a) Un título universitario colgado en la pared.", "b) Un sistema de esquemas de pensamiento y acción que organizan la percepción de la realidad.", "c) La costumbre de usar uniforme.", "d) El hábito de higiene personal solamente."], correct: 1, retro: "Retroalimentación: Es una disposición general que permite abordar problemas comunes de formas compartidas." },
+            { q: "45. ¿Cuál es la mayor limitación de aprender solo a través de la \"escritura\"?", options: ["a) Que se gasta mucho papel.", "b) Que es una codificación abstracta que puede alejar al alumno de la experiencia directa y viva.", "c) Que los niños se cansan de la mano.", "d) Que no se pueden usar colores."], correct: 1, retro: "Retroalimentación: La escuela exige aprender a través de signos, lo que requiere una alfabetización sólida para no fracasar." },
+            { q: "46. Según Stenhouse, ¿quién es el protagonista del diseño curricular en el aula?", options: ["a) El Ministro de Educación.", "b) El Profesor, conocedor de sus alumnos y su contexto.", "c) El Director administrativo.", "d) El autor del libro de texto."], correct: 1, retro: "Retroalimentación: El profesor debe basarse en su experiencia para organizar actividades y recursos efectivos." },
+            { q: "47. El currículum \"oficial\" u \"ostensible\" es:", options: ["a) El que ocurre en los recreos.", "b) El proyecto educativo contenido en el texto legal o documentos normativos del Estado.", "c) Lo que el alumno aprende por su cuenta en Internet.", "d) La opinión de los medios de comunicación."], correct: 1, retro: "Retroalimentación: Es el plan propuesto que luego será interpretado por docentes y materiales." },
+            { q: "48. ¿Qué es la \"Escuela a la medida del niño\" en términos de Claparède?", options: ["a) Sillas y mesas del tamaño de los niños.", "b) Una pedagogía que sigue las leyes de la psicología infantil y las necesidades del alumno.", "c) Que el niño decida qué profesor quiere tener.", "d) No tener horarios de entrada ni de salida."], correct: 1, retro: "Retroalimentación: Implica que el educador debe ser un \"conocedor de niños\" para no fracasar en la enseñanza." },
+            { q: "49. La evaluación en los países con \"éxito educativo\" (como Finlandia) se centra en:", options: ["a) La competencia del alumno para usar el conocimiento, más que en pruebas masivas de memoria.", "b) Exámenes semanales obligatorios.", "c) Castigar a los que no estudian.", "d) No evaluar nunca nada."], correct: 0, retro: "Retroalimentación: Privilegian la autonomía curricular y el trabajo en equipo por sobre el dictado." },
+            { q: "50. ¿Cuál es el fin último de la educación obligatoria según Rafael Feito?", options: ["a) Que todos vayan a la universidad obligatoriamente.", "b) Crear ciudadanos cultos, solidarios, críticos y capaces de seguir aprendiendo toda la vida.", "c) Que los jóvenes aprendan a obedecer sin cuestionar.", "d) Preparar a los niños solo para ser trabajadores manuales."], correct: 1, retro: "Retroalimentación: La escuela debe garantizar que los jóvenes salgan convertidos en personas autónomas y responsables." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = (typeof questions !== 'undefined' ? questions : quizData).length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const uList = document.createElement('ul');
+            uList.className = 'options';
+            
+            item.options.forEach((opt, optIndex) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    // Limpiar selecciones previas en esta pregunta
+                    const allOpts = uList.querySelectorAll('li');
+                    allOpts.forEach(o => o.style.fontWeight = 'normal');
+                    li.style.fontWeight = 'bold';
+                    
+                    showFeedback(index, optIndex === item.correct);
+                    registrarRespuesta(index, optIndex === item.correct);
+                };
+                uList.appendChild(li);
+            });
+            
+            card.appendChild(uList);
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.id = `feedback-${index}`;
+            feedbackDiv.className = 'feedback';
+            card.appendChild(feedbackDiv);
+            
+            container.appendChild(card);
+        });
+
+        function showFeedback(qIdx, isCorrect) {
+            const fDiv = document.getElementById(`feedback-${qIdx}`);
+            fDiv.style.display = 'block';
+            if (isCorrect) {
+                fDiv.innerText = questions[qIdx].retro;
+                fDiv.className = 'feedback correct';
+            } else {
+                fDiv.innerText = "vuelve a analizar la pregunta";
+                fDiv.className = 'feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>
