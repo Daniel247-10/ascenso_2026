@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Neurociencia y Neuroaprendizaje</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; max-width: 900px; margin: 20px auto; padding: 20px; background-color: #f0f3f5; color: #2c3e50; }
+        h1 { text-align: center; color: #2e86c1; border-bottom: 4px solid #2e86c1; padding-bottom: 15px; text-transform: uppercase; }
+        .question-card { background: #ffffff; padding: 30px; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 8px solid #2e86c1; }
+        .question-text { font-size: 1.2em; font-weight: bold; margin-bottom: 20px; color: #1b4f72; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 12px 0; padding: 15px 20px; border: 1px solid #d5dbdb; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; background: #fdfefe; }
+        .options li:hover { background-color: #eaf2f8; border-color: #3498db; transform: translateX(5px); }
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: slideDown 0.4s ease-out; border-left: 6px solid; }
+        .correct { background-color: #d4efdf; color: #145a32; border-color: #a9dfbf; }
+        .incorrect { background-color: #f9ebea; color: #7b241c; border-color: #f2d7d5; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Neurociencia y Neuroaprendizaje (Marilina Rotger)</h1>
+    <div id="quiz"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const questions = [
+            { q: "1. Según la teoría del 'Cerebro Triuno' de Paul MacLean, ¿cuál es la estructura responsable de las funciones vitales automáticas y la homeostasis?", options: ["a) El cerebro límbico o emocional.", "b) El neocórtex o cerebro racional.", "c) El cerebro reptiliano o instintivo.", "d) Los lóbulos prefrontales."], correct: 2, retro: "Retroalimentación: El cerebro reptil se encarga de regular acciones básicas como respirar, latir del corazón y la supervivencia inmediata (Fuente [2])." },
+            { q: "2. ¿Qué característica del cerebro reptiliano se manifiesta como la necesidad de ambientes y personas previsibles?", options: ["a) Territorialidad.", "b) Resistencia al cambio.", "c) Jerarquía social.", "d) Plasticidad negativa."], correct: 1, retro: "Retroalimentación: Esta resistencia se traduce en rituales, hábitos y supersticiones para mantener la seguridad (Fuente [2])." },
+            { q: "3. El sistema límbico, también llamado cerebro mamífero, tiene como funciones principales:", options: ["a) El pensamiento abstracto.", "b) Las emociones y los pasos iniciales del proceso de memorización.", "c) Control de movimientos voluntarios.", "d) Regulación de la homeostasis corporal."], correct: 1, retro: "Retroalimentación: Este sistema es el centro de la afectividad y donde se sitúan la amígdala y el hipocampo (Fuente [3])." },
+            { q: "4. ¿Qué parte del cerebro triuno es la responsable de las funciones ejecutivas como pensar, planificar y organizar?", options: ["a) Cerebro Reptiliano.", "b) Cerebro Límbico.", "c) Cerebro Racional (Neocórtex).", "d) Tronco cerebral."], correct: 2, retro: "Retroalimentación: El neocórtex es el asiento de la inteligencia intelectual y emocional, permitiendo la reflexión humana (Fuente [4])." },
+            { q: "5. El concepto de 'retraso genómico' se refiere a:", options: ["a) Falta de evolución del ADN.", "b) El desfase entre nuestro genoma y el mundo artificial actual.", "c) Incapacidad de sinapsis.", "d) Enfermedad congénita del aprendizaje."], correct: 1, retro: "Retroalimentación: Este desfase es responsable de muchas 'enfermedades de la civilización' (Fuente [5])." },
+            { q: "6. La capacidad del cerebro para adaptarse, reorganizarse y modificarse durante toda la vida se denomina:", options: ["a) Supervivencia.", "b) Homeostasis.", "c) Plasticidad cerebral (Neuroplasticidad).", "d) Sinapsis eléctrica."], correct: 2, retro: "Retroalimentación: La plasticidad permite al cerebro cambiar su estructura y funciones según el ambiente (Fuente [6])." },
+            { q: "7. ¿Cuándo se produce la 'neuroplasticidad negativa'?", options: ["a) Al aprender un idioma.", "b) Al desarmar o desechar redes neuronales poco activas o inactivas.", "c) Estado emocional positivo.", "d) Actividad física intensa."], correct: 1, retro: "Retroalimentación: El cerebro elimina conexiones que no utiliza para optimizar su capacidad (poda neuronal) (Fuente [7])." },
+            { q: "8. ¿Cuál es la unidad básica del aprendizaje según las neurociencias?", options: ["a) El neurotransmisor.", "b) La neurona.", "c) El axón.", "d) La dendrita."], correct: 1, retro: "Retroalimentación: Las neuronas son responsables de crear las nuevas redes ante cada nuevo aprendizaje (Fuente [8, 9])." },
+            { q: "9. Para que un aprendizaje se consolide, ¿cuántas veces debe repetirse la información con frecuencias diferentes?", options: ["a) De 1 a 3 veces.", "b) De 7 a 10 veces.", "c) Exactamente 5 veces.", "d) Más de 20 veces."], correct: 1, retro: "Retroalimentación: La repetición con novedad es clave para que el aprendizaje pase a la memoria de largo plazo (Fuente [10])." },
+            { q: "10. ¿Cuál de los siguientes factores DIFICULTA la neuroplasticidad?", options: ["a) Interacción social.", "b) Descanso adecuado.", "c) Hábitos tóxicos y pocas horas de sueño.", "d) Educación cerebro-compatible."], correct: 2, retro: "Retroalimentación: La falta de sueño y hábitos tóxicos limitan la capacidad de cambio cerebral (Fuente [7])." },
+            { q: "11. Según Paul Ekman, ¿cuáles son las seis emociones básicas o primarias con las que nacemos?", options: ["a) Amor, odio, envidia.", "b) Miedo, aversión, sorpresa, alegría, ira y tristeza.", "c) Felicidad, ansiedad, estrés.", "d) Placer, dolor, hambre."], correct: 1, retro: "Retroalimentación: Estas emociones son inevitables y necesarias para la supervivencia (Fuente [11])." },
+            { q: "12. Si un estudiante se encuentra en un estado emocional negativo, la emoción funciona como:", options: ["a) Motivadora.", "b) Bloqueadora del aprendizaje.", "c) Estímulo neutral.", "d) Catalizador racional."], correct: 1, retro: "Retroalimentación: El estado emocional negativo cierra el paso de información a los centros racionales (Fuente [12])." },
+            { q: "13. La reacción fisiológica manifiesta en el cuerpo (palpitaciones, sudor) después de una emoción se llama:", options: ["a) Sentimiento.", "b) Percepción.", "c) Sensación.", "d) Intuición."], correct: 2, retro: "Retroalimentación: La sensación es la representación física inevitable de la emoción (Fuente [13])." },
+            { q: "14. A diferencia de la emoción y la sensación, el 'sentimiento' se caracteriza por ser:", options: ["a) Inevitable.", "b) Opcional y gestionado por los lóbulos prefrontales.", "c) Localizado en el corazón.", "d) De muy corta duración."], correct: 1, retro: "Retroalimentación: En el sentimiento se interpreta la emoción dándole nombre mediante la razón (Fuente [13])." },
+            { q: "15. ¿Qué estructura del sistema límbico determina qué recuerdos se almacenan?", options: ["a) El Hipocampo.", "b) La Amígdala.", "c) El Tálamo.", "d) El Hipotálamo."], correct: 1, retro: "Retroalimentación: La amígdala es el centro de la memoria emocional y decide el destino de los recuerdos (Fuente [14])." },
+            { q: "16. ¿Cuál es la función del Hipocampo en el proceso de memoria?", options: ["a) Reaccionar con lucha.", "b) Enviar recuerdos a la corteza para almacenamiento a largo plazo.", "c) Secretar dopamina.", "d) Regular temperatura."], correct: 1, retro: "Retroalimentación: El hipocampo actúa como centro integrador que traslada la memoria (Fuente [14, 15])." },
+            { q: "17. La amígdala cerebral responde y aprende principalmente por:", options: ["a) Razonamiento lógico.", "b) Premios o castigos (placer o dolor).", "c) Lectura y escritura.", "d) Ejercicio físico."], correct: 1, retro: "Retroalimentación: Su función es la supervivencia, alejándonos del dolor (Fuente [16])." },
+            { q: "18. El concepto de 'secuestro amigdalar' de Daniel Goleman se refiere a:", options: ["a) Técnica de memoria.", "b) Miedo o angustia que impiden una respuesta lógica.", "c) Almacenamiento en neocórtex.", "d) Estado de relajación."], correct: 1, retro: "Retroalimentación: Es cuando la desesperación bloquea el cerebro racional (Fuente [17])." },
+            { q: "19. Cuando la amígdala se activa ante una amenaza en el aula, ¿qué ocurre con la información pedagógica?", options: ["a) Se acelera.", "b) Se detiene el paso a los lóbulos prefrontales.", "c) Se hace a largo plazo.", "d) Se procesa con lógica."], correct: 1, retro: "Retroalimentación: La amígdala prioriza la supervivencia sobre lo cognitivo (Fuente [18, 19])." },
+            { q: "20. ¿Qué son los neurotransmisores?", options: ["a) Impulsos eléctricos.", "b) Sustancias químicas que permiten la transmisión de señales en la sinapsis.", "c) Huesos del cráneo.", "d) Células de nutrición."], correct: 1, retro: "Retroalimentación: La comunicación entre neuronas es de naturaleza química (Fuente [20, 21])." },
+            { q: "21. El 'Circuito de Recompensa' (DAS) en el aprendizaje está compuesto por:", options: ["a) Acetilcolina y Melatonina.", "b) Dopamina, Noradrenalina y Serotonina.", "c) Adrenalina e Insulina.", "d) Dopamina y Oxitocina."], correct: 1, retro: "Retroalimentación: Estos tres trabajan juntos para motivar y dar satisfacción (Fuente [21, 22])." },
+            { q: "22. ¿Por qué la Dopamina es conocida como el 'neurotransmisor amigo del aprendizaje'?", options: ["a) Produce sueño.", "b) Genera placer, motiva y abre la amígdala.", "c) Elimina recuerdos.", "d) Solo para exámenes."], correct: 1, retro: "Retroalimentación: La dopamina predispone al cerebro para trabajar con entusiasmo (Fuente [23])." },
+            { q: "23. ¿Qué función cumple la Serotonina en el circuito de recompensa DAS?", options: ["a) Inicia curiosidad.", "b) Regula el sueño y vuelve al organismo al estado normal tras el logro.", "c) Reacción de fuga.", "d) Atención sostenida."], correct: 1, retro: "Retroalimentación: Se activa al obtener el objetivo, regulando humor y ansiedad (Fuente [22, 24])." },
+            { q: "24. ¿Qué neurotransmisor controla el enfoque mental y la atención?", options: ["a) Serotonina.", "b) Noradrenalina.", "c) Melatonina.", "d) Acetilcolina."], correct: 1, retro: "Retroalimentación: La noradrenalina regula la excitación física y mental para aprender (Fuente [25])." },
+            { q: "25. La capacidad de crear nuevas neuronas se conoce como:", options: ["a) Neuroplasticidad.", "b) Neurogénesis.", "c) Sinapsis.", "d) Poda axonal."], correct: 1, retro: "Retroalimentación: Gracias a la neurogénesis estamos en constante aprendizaje (Fuente [26])." },
+            { q: "26. ¿Qué periodo de la vida es fundamental para consolidar aprendizajes?", options: ["a) Los primeros cinco años.", "b) Adolescencia.", "c) Etapa universitaria.", "d) Edad adulta."], correct: 0, retro: "Retroalimentación: En este periodo el cerebro tiene una plasticidad fantástica (Fuente [27])." },
+            { q: "27. ¿Cuáles son los dispositivos básicos del aprendizaje?", options: ["a) Lectura y cálculo.", "b) Atención, Motivación, Memoria, Sensopercepción y Emoción.", "c) Disciplina y orden.", "d) Audición y visión."], correct: 1, retro: "Retroalimentación: Estos procesos son indispensables para el aprendizaje integral (Fuente [28])." },
+            { q: "28. La capacidad de guardar información y recuperarla se define como:", options: ["a) Atención.", "b) Inteligencia.", "c) Memoria.", "d) Sensopercepción."], correct: 2, retro: "Retroalimentación: Es uno de los dispositivos clave (Fuente [29, 30])." },
+            { q: "29. Howard Gardner define la inteligencia como:", options: ["a) Coeficiente numérico.", "b) Memorizar datos.", "c) Potencial bío-psicológico para resolver problemas.", "d) Dominio de matemáticas."], correct: 2, retro: "Retroalimentación: Propone que la inteligencia es múltiple y cultural (Fuente [29])." },
+            { q: "30. Habilidad para visualizar objetos y orientarse con mapas es inteligencia:", options: ["a) Lógica.", "b) Espacial.", "c) Kinestésica.", "d) Interpersonal."], correct: 1, retro: "Retroalimentación: Se basa en memoria visual y orientación (Fuente [31])." },
+            { q: "31. La inteligencia 'intrapersonal' se caracteriza por:", options: ["a) Sensibilidad a otros.", "b) Manejo del lenguaje.", "c) Autoconciencia y comprensión de propias emociones.", "d) Crianza de alimentos."], correct: 2, retro: "Retroalimentación: Orientada hacia el conocimiento de uno mismo (Fuente [32])." },
+            { q: "32. ¿Qué ocurre cuando las neuronas pierden su conexión por desuso?", options: ["a) PLP.", "b) Depresión a Largo Plazo (DLP).", "c) Neurogénesis.", "d) Sinapsis permanente."], correct: 1, retro: "Retroalimentación: La falta de estímulo debilita las redes neuronales (Fuente [33])." },
+            { q: "33. La 'Poda Neuronal' busca:", options: ["a) Dañar el cerebro.", "b) Eliminar conexiones poco utilizadas para optimizar capacidad.", "c) Aumentar amígdala.", "d) Impedir aprender."], correct: 1, retro: "Retroalimentación: Es un mecanismo natural de optimización (Fuente [34])." },
+            { q: "34. ¿Qué atención requiere un gasto energético alto y esfuerzo consciente?", options: ["a) Espontánea.", "b) Involuntaria.", "c) Voluntaria.", "d) Amigdalina."], correct: 2, retro: "Retroalimentación: Es la que usamos para estudiar de forma dirigida (Fuente [35])." },
+            { q: "35. La memoria de 'trabajo' o a corto plazo se caracteriza por:", options: ["a) Milisegundos.", "b) Pocos minutos y resolución de situaciones actuales.", "c) Durar años.", "d) Ser automática."], correct: 1, retro: "Retroalimentación: Se ubica en los lóbulos prefrontales (Fuente [36])." },
+            { q: "36. Memoria que almacena esquemas de habilidades motoras (andar en bici):", options: ["a) Declarativa.", "b) Semántica.", "c) Implícita o Procedimental.", "d) Episódica."], correct: 2, retro: "Retroalimentación: No requiere conciencia plena para su ejecución (Fuente [15])." },
+            { q: "37. Hormona del estrés que bloquea el aprendizaje:", options: ["a) Dopamina.", "b) Serotonina.", "c) Cortisol.", "d) Noradrenalina."], correct: 2, retro: "Retroalimentación: Impide que la información llegue a la corteza (Fuente [19])." },
+            { q: "38. El sistema SARA tiene como función:", options: ["a) Almacenar recuerdos.", "b) Determinar tipo de información que pasa al sistema límbico.", "c) Regular hambre.", "d) Controlar manos."], correct: 1, retro: "Retroalimentación: Es el primer filtro de información sensorial (Fuente [37])." },
+            { q: "39. Estado ideal para procesar información con intervalos de reflexión:", options: ["a) Uptime.", "b) Downtime.", "c) Sinapsis.", "d) Poda axónica."], correct: 1, retro: "Retroalimentación: Momento de diálogo interno y asociaciones (Fuente [38])." },
+            { q: "40. Duración aproximada de 'Uptime' en secundaria:", options: ["a) 5 min.", "b) 12 a 15 minutos.", "c) 60 min.", "d) 3 horas."], correct: 1, retro: "Retroalimentación: El cerebro necesita pausas para retomar atención (Fuente [39])." },
+            { q: "41. El aprendizaje 'profundo' ocurre cuando:", options: ["a) Se memorizan fechas.", "b) Se relaciona nueva idea con experiencia previa para comprensión.", "c) Se clasifica solo.", "d) Se estudia para aprobar."], correct: 1, retro: "Retroalimentación: Implica interacción activa y flexibilidad cognitiva (Fuente [40])." },
+            { q: "42. Cinco capacidades de la Inteligencia Emocional (Goleman):", options: ["a) Lectura y arte.", "b) Autoconciencia, Autorregulación, Motivación, Empatía, Habilidades Sociales.", "c) Orden y disciplina.", "d) Juicio y razón."], correct: 1, retro: "Retroalimentación: Permiten gestionar las emociones con éxito (Fuente [41])." },
+            { q: "43. Persona con inteligencia emocional alta logra:", options: ["a) Reacciones violentas.", "b) Respuestas emocionales en lugar de reacciones automáticas.", "c) Eliminar emociones.", "d) Coeficiente genio."], correct: 1, retro: "Retroalimentación: La gestión permite responder de forma adaptativa (Fuente [42])." },
+            { q: "44. ¿Qué es la 'Empatía'?", options: ["a) Miedo a otros.", "b) Reconocer y comprender emociones ajenas.", "c) Memorizar palabras.", "d) Resistencia grupal."], correct: 1, retro: "Retroalimentación: Capacidad clave mencionada por la autora (Fuente [41, 43])." },
+            { q: "45. Objetivo del 'Botiquín de Primeros Auxilios Emocionales':", options: ["a) Curar heridas físicas.", "b) Reconocer y sanar emociones somatizadas.", "c) Guardar fármacos.", "d) Castigar llanto."], correct: 1, retro: "Retroalimentación: Usa recursos simbólicos para el manejo emocional (Fuente [44])." },
+            { q: "46. Los 'Recreos Cerebrales' sirven para:", options: ["a) Jugar fútbol.", "b) Oxigenar cerebro y despertar dopamina con movimiento.", "c) Descanso del docente.", "d) Limpiar el aula."], correct: 1, retro: "Retroalimentación: Pausas necesarias cada 20 minutos (Fuente [45, 46])." },
+            { q: "47. Importancia de la hidratación en el aula:", options: ["a) Por el clima.", "b) Mejora ánimo, memoria y concentración.", "c) Higiene.", "d) No salir al baño."], correct: 1, retro: "Retroalimentación: La falta de agua incide en el rendimiento cognitivo (Fuente [47, 48])." },
+            { q: "48. En el estilo VAK, ¿qué significan las siglas?", options: ["a) Valor y Alerta.", "b) Visual, Auditivo y Kinestésico.", "c) Velocidad y Atención.", "d) Visión y Audición."], correct: 1, retro: "Retroalimentación: Vías preferentes de entrada de información (Fuente [49])." },
+            { q: "49. Evaluación asertiva propone verla como:", options: ["a) Castigo.", "b) Situación estresante.", "c) Proceso de diálogo, comprensión y mejora.", "d) Medición de fracaso."], correct: 2, retro: "Retroalimentación: Herramienta pedagógica positiva (Fuente [50, 51])." },
+            { q: "50. Técnica donde estudiantes diseñan la prueba para sus compañeros:", options: ["a) Bollos papel.", "b) Cambio de roles.", "c) Cinco segundos.", "d) La guerrita."], correct: 1, retro: "Retroalimentación: Fomenta el diseño creativo de preguntas (Fuente [52])." }
+        ];
+
+        const container = document.getElementById('quiz');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = questions.length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIndex) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => check(index, optIndex, li);
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feed = document.createElement('div');
+            feed.id = `feed-${index}`;
+            feed.className = 'feedback';
+            card.appendChild(feed);
+            container.appendChild(card);
+        });
+
+        function check(qIdx, sIdx, el) {
+            const fDiv = document.getElementById(`feed-${qIdx}`);
+            fDiv.style.display = 'block';
+            if (sIdx === questions[qIdx].correct) {
+                registrarRespuesta(qIdx, true);
+                fDiv.innerText = questions[qIdx].retro;
+                fDiv.className = 'feedback correct';
+            } else {
+                registrarRespuesta(qIdx, false);
+                fDiv.innerText = "vuelve a analizar la pregunta";
+                fDiv.className = 'feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>

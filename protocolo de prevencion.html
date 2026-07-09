@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Protocolo de Violencia Bolivia</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f8f9fa; color: #212529; }
+        h1 { text-align: center; color: #b71c1c; border-bottom: 4px solid #b71c1c; padding-bottom: 10px; margin-bottom: 30px; }
+        .question-card { background: #ffffff; padding: 25px; margin-bottom: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 6px solid #b71c1c; }
+        .question-text { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; color: #343a40; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; padding: 12px 20px; border: 1px solid #dee2e6; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: #fff; }
+        .options li:hover { background-color: #f1f3f5; border-color: #b71c1c; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: fadeIn 0.4s; border-left: 5px solid; }
+        .correct { background-color: #d4edda; color: #155724; border-color: #c3e6cb; border-left-color: #28a745; }
+        .incorrect { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; border-left-color: #dc3545; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Protocolo de Prevención y Actuación (Violencia)</h1>
+    <div id="quiz-container"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const questions = [
+            { q: "1. ¿Cuál es el objeto principal del presente protocolo?", options: ["a) Sancionar penalmente a los agresores.", "b) Definir lineamientos y procedimientos para la prevención, actuación, denuncia y protección.", "c) Organizar juntas escolares para vigilancia.", "d) Establecer el currículo de educación sexual."], correct: 1, retro: "El protocolo busca salvaguardar la integridad de las y los estudiantes mediante respuestas oportunas y eficaces [1]." },
+            { q: "2. ¿Qué se entiende por 'Protocolo' según el documento?", options: ["a) Un conjunto de leyes penales.", "b) Un instrumento de actuación que define los pasos a seguir en una situación determinada.", "c) Sugerencia de comportamiento para padres.", "d) Reglamento de faltas y sanciones."], correct: 1, retro: "Define la ruta a seguir respondiendo al qué, cómo, dónde, quién, a quién y por qué [2]." },
+            { q: "3. ¿Cuál de estos es un principio rector del protocolo?", options: ["a) El interés superior de la niña, niño o adolescente.", "b) El derecho a la huelga docente.", "c) Autonomía de gestión administrativa.", "d) Castigo físico correctivo."], correct: 0, retro: "Entre otros principios se encuentran la cultura de paz, prioridad absoluta y celeridad [3]." },
+            { q: "4. ¿Cómo define la Ley N° 548 la violencia contra la niñez y adolescencia?", options: ["a) Solo agresiones con marcas visibles.", "b) Acción u omisión que ocasione privaciones, lesiones, daños, sufrimientos o perjuicios.", "c) Conflicto natural entre pares.", "d) Falta contra el reglamento escolar."], correct: 1, retro: "La violencia incluye tanto acciones directas como omisiones que afecten el desarrollo integral [4]." },
+            { q: "5. ¿En qué consiste la violencia psicológica según el protocolo?", options: ["a) Agresiones físicas leves.", "b) Agresiones verbales, humillaciones o manipulación que dañan la autoestima.", "c) Falta de útiles escolares.", "d) Reprobado sistemático."], correct: 1, retro: "Atenta contra la salud mental y el desarrollo integral sin necesidad de contacto físico [4]." },
+            { q: "6. ¿Qué manifestaciones incluye específicamente la violencia psicológica?", options: ["a) Golpes y empujones.", "b) Gritos, insultos, burlas y difusión de rumores.", "c) Olvido de la merienda.", "d) Falta de supervisión."], correct: 1, retro: "Incluye maltrato verbal y emocional, difícil de detectar por ausencia de marcas físicas [5]." },
+            { q: "7. La violencia física se define como:", options: ["a) Contacto accidental.", "b) Acción intencional que ocasiona lesiones o sufrimientos físicos, internos o externos.", "c) Disciplina permitida por usos.", "d) Hostigamiento verbal."], correct: 1, retro: "En el Código Penal y el Código Niña, Niño y Adolescente, estas lesiones se tipifican como delito [6]." },
+            { q: "8. ¿Cuál es un ejemplo de violencia por omisión o negligencia en el ámbito educativo?", options: ["a) Uso de gritos para orden.", "b) Inasistencia e impuntualidad de maestros dejando desatendidos a los estudiantes.", "c) Reporte inmediato de abuso.", "d) Proyectos sociocomunitarios."], correct: 1, retro: "También incluye no realizar seguimiento a estudiantes con necesidades especiales o dejar recreos sin vigilancia [7, 8]." },
+            { q: "9. ¿Qué constituye violencia sexual según la definición de UNICEF citada?", options: ["a) Charla sobre biología.", "b) Acción que involucre a un menor en actividad sexual que no puede comprender o consentir.", "c) Enamoramiento normal.", "d) Revisión médica escolar."], correct: 1, retro: "En estos actos existe una asimetría de poder y opera la coerción o manipulación [9]." },
+            { q: "10. ¿Cuál de las siguientes es una manifestación de violencia sexual?", options: ["a) Evaluar rendimiento.", "b) Realizar toqueteos, caricias o acercamientos erotizados.", "c) Asignar tareas.", "d) Llamada de atención."], correct: 1, retro: "Incluye insinuaciones, comentarios sexuales, exposición a pornografía o espionaje en baños [10, 11]." },
+            { q: "11. Según el Código Penal, el delito de 'Estupro' se refiere a:", options: ["a) Acceso carnal con menores de 14 años.", "b) Acceso carnal mediante seducción o engaño con personas de 14 a 18 años.", "c) Acoso escolar constante.", "d) Violencia física grave."], correct: 1, retro: "Es sancionado con privación de libertad de tres a seis años [12]." },
+            { q: "12. ¿Cuál es la sanción para la violación de un infante menor de 14 años?", options: ["a) 5 a 10 años.", "b) 20 a 25 años de privación de libertad.", "c) Traslado de unidad.", "d) Amonestación escrita."], correct: 1, retro: "Si existen agravantes, la pena puede alcanzar los 30 años sin derecho a indulto [13]." },
+            { q: "13. Se considera una agravante en delitos sexuales cuando el autor:", options: ["a) Es un compañero de curso.", "b) Estuviere encargado de la educación de la víctima o esta dependa de él.", "c) No tiene antecedentes.", "d) Hecho fuera de horario."], correct: 1, retro: "La relación de autoridad docente-estudiante agrava la pena según el Código Penal [14]." },
+            { q: "14. ¿Cuál es una consecuencia emocional a corto plazo de la violencia?", options: ["a) Ideas suicidas persistentes.", "b) Sentimientos de tristeza, vergüenza y culpa.", "c) Trastornos crónicos.", "d) Conductas delictivas."], correct: 1, retro: "También se presentan síntomas de ansiedad e irritabilidad sin causa aparente [15]." },
+            { q: "15. ¿Qué consecuencia conductual a mediano plazo puede detectarse?", options: ["a) Juego alegre.", "b) Consumo de alcohol, drogas o deserción escolar.", "c) Mejora concentración.", "d) Puntualidad extrema."], correct: 1, retro: "Las secuelas pueden incluir comportamientos sexuales no apropiados para la edad [16]." },
+            { q: "16. ¿Por qué es difícil que los niños manifiesten espontáneamente la violencia?", options: ["a) No les importa.", "b) Miedo, amenaza del agresor o falta de conocimiento de derechos.", "c) Prefieren mentir.", "d) No les preguntan."], correct: 1, retro: "La detección suele darse por observación de indicadores físicos y emocionales [17]." },
+            { q: "17. Ante un relato de violencia sexual, ¿qué actitud debe tomar el adulto?", options: ["a) Dudar del relato.", "b) Creer en el relato de la víctima y no culpabilizarla.", "c) Confrontar a la víctima.", "d) Guardar silencio."], correct: 1, retro: "No se debe poner en duda la narración aunque el agresor sea de confianza [17]." },
+            { q: "18. ¿Cuál es un indicador físico que puede alertar sobre violencia sexual?", options: ["a) Resfriado común.", "b) Sangrado en genitales o dificultades para caminar.", "c) Uso de anteojos.", "d) Diente de leche caído."], correct: 1, retro: "También se consideran indicadores el embarazo adolescente y marcas físicas inusuales [18]." },
+            { q: "19. ¿Qué indicador emocional puede detectarse en el aula?", options: ["a) Participación activa.", "b) Temor al contacto físico con adultos y aislamiento.", "c) Aumento de apetito.", "d) Interés deportivo."], correct: 1, retro: "Otros signos incluyen disminución del rendimiento y temor a permanecer en el establecimiento [19]." },
+            { q: "20. Si detecta un posible caso de violencia, ¿a quién comunica primero?", options: ["a) A la prensa.", "b) Inmediatamente a la directora o director.", "c) A los compañeros.", "d) Al sindicato."], correct: 1, retro: "El reporte debe ser inmediato siempre que la autoridad no sea el agresor [20]." },
+            { q: "21. ¿Qué debe hacer un docente si el director es el presunto agresor?", options: ["a) Nada.", "b) Comunicar a Dirección Distrital y Defensoría (DNA).", "c) Esperar reunión.", "d) Convencer al director."], correct: 1, retro: "Se salta la instancia jerárquica para proteger a la víctima [20, 21]." },
+            { q: "22. Sobre la información del caso, ¿qué debe asegurar la autoridad?", options: ["a) Publicarla.", "b) Garantizar estricta confidencialidad y privacidad.", "c) Compartirla con todos.", "d) Informar a todos los padres."], correct: 1, retro: "Solo se divulgará a instancias de denuncia y familiares no implicados [22]." },
+            { q: "23. ¿Qué acción está prohibida durante la entrevista?", options: ["a) Ambiente de confianza.", "b) Realizar preguntas adicionales que revictimicen.", "c) Escuchar activamente.", "d) Derivar a Defensoría."], correct: 1, retro: "Bajo ningún concepto se deben realizar preguntas adicionales a la víctima [23]." },
+            { q: "24. ¿Qué es la 'contención' según el protocolo?", options: ["a) Castigar al agresor.", "b) Acto de recibir, acoger, proteger y apoyar.", "c) Impedir salida.", "d) Obligar a disculparse."], correct: 1, retro: "Es un procedimiento de acogida inicial para dar estabilidad emocional [24]." },
+            { q: "25. ¿Quién realiza la contención especializada en violencia sexual?", options: ["a) Profesor física.", "b) Personal de Defensoría (DNA) o SLIM.", "c) Regente.", "d) Cualquier padre."], correct: 1, retro: "Se requiere intervención de profesionales en psicología y trabajo social de estas instancias [25]." },
+            { q: "26. ¿Cuál es el plazo máximo para denunciar un hecho conocido?", options: ["a) 48 horas.", "b) 24 horas.", "c) Una semana.", "d) Fin de bimestre."], correct: 1, retro: "La denuncia ante la DNA, Ministerio Público o FELCV es obligatoria y urgente [26]." },
+            { q: "27. ¿Qué sucede si un miembro de la comunidad no denuncia?", options: ["a) Nada.", "b) Acusado de complicidad por omisión según el Código Penal.", "c) Felicitación.", "d) Descuento."], correct: 1, retro: "La denuncia no es opcional; omitirla vulnera la normativa penal [26]." },
+            { q: "28. ¿Qué es falta muy grave en el reglamento respecto a esto?", options: ["a) Tardanza.", "b) Acoso sexual, estupro o violación contra estudiantes.", "c) Sin plan de clase.", "d) Olvido registro."], correct: 1, retro: "Estas conductas derivan en procesos disciplinarios y rótulo observado en el RDA [27]." },
+            { q: "29. ¿Qué medida garantiza el director sobre la educación de la víctima?", options: ["a) Suspensión.", "b) Continuidad del derecho a la educación con adaptaciones curriculares.", "c) Cambio de colegio.", "d) Sin tareas."], correct: 1, retro: "La escuela debe realizar adaptaciones para compensar inasistencias por recuperación [28]." },
+            { q: "30. ¿A qué autoridad se derivan delitos penales?", options: ["a) Consejo maestros.", "b) Ministerio Público.", "c) Junta Escolar.", "d) Director distrital."], correct: 1, retro: "Los delitos son competencia de la justicia ordinaria [29, 30]." },
+            { q: "31. ¿Qué es la 'contrarreferencia'?", options: ["a) Denuncia contra denunciante.", "b) Respuesta de instancia receptora sobre acciones y recomendaciones.", "c) Testimonio agresor.", "d) Anulación denuncia."], correct: 1, retro: "Permite a la escuela conocer el estado del caso y apoyar la recuperación [31]." },
+            { q: "32. ¿Cuál es el propósito del sistema de registro de casos?", options: ["a) Lista pública.", "b) Fines estadísticos para orientar prevención.", "c) Cobrar multas.", "d) Comparar colegios."], correct: 1, retro: "Los datos anuales ayudan a formular planes y programas de prevención [32]." },
+            { q: "33. Medida preventiva para directores:", options: ["a) Prohibir ingreso padres.", "b) Identificar lugares inseguros y mejorar vigilancia en baños y pasillos.", "c) Colegio con llave.", "d) No comunicación entre niños."], correct: 1, retro: "Se deben organizar la supervisión de espacios poco visibles y áreas de uso común [33]." },
+            { q: "34. Sobre comunicación, el protocolo prohíbe a maestros:", options: ["a) Hablar en aula.", "b) Comunicación individual por teléfono o redes sociales.", "c) Tareas oficiales.", "d) Saludar."], correct: 1, retro: "La comunicación individual fuera de lo pedagógico es un factor de riesgo [34, 35]." },
+            { q: "35. ¿Qué debe hacer el portero para seguridad?", options: ["a) Puertas abiertas.", "b) Cuidado de la puerta en ingresos, recreos y salidas sin abandonar función.", "c) Visitas personales.", "d) Delegar a alumnos."], correct: 1, retro: "No deben permitir ingreso de personas ajenas sin autorización previa [36, 37]." },
+            { q: "36. Responsabilidad de padres y tutores:", options: ["a) Ignorar conflictos.", "b) Promover diálogo constante con hijos para comunicación familiar.", "c) Sanción física.", "d) No asistir reuniones."], correct: 1, retro: "La corresponsabilidad familiar es clave para la detección [38]." },
+            { q: "37. Los estudiantes tienen el deber de:", options: ["a) Guardar silencio.", "b) Respetar integridad física, psicológica y sexual de todos.", "c) Armas defensa.", "d) No participar plan."], correct: 1, retro: "Deben respetar la integridad de sus pares, maestros y personal [39]." },
+            { q: "38. ¿Qué busca la 'deconstrucción de estereotipos'?", options: ["a) Vestimenta igual.", "b) Erradicar prejuicios que naturalizan la violencia.", "c) Eliminar artes.", "d) No fútbol."], correct: 1, retro: "Promueve cultura de respeto a la diversidad y no violencia [40]." },
+            { q: "39. En prevención, ¿qué enseñan sobre el cuerpo a niños?", options: ["a) Propiedad Estado.", "b) Territorio privado que nadie toca sin permiso.", "c) No baño solos.", "d) Caricias buenas."], correct: 1, retro: "Deben reconocer partes íntimas y diferenciar caricias adecuadas de inadecuadas [41]." },
+            { q: "40. Rol del Ministerio de Educación:", options: ["a) Sentencias cárcel.", "b) Políticas educativas con enfoque de descolonización y despatriarcalización.", "c) Fianza maestros.", "d) Reemplazo padres."], correct: 1, retro: "Busca la convivencia comunitaria sin asimetrías de poder [42]." },
+            { q: "41. Acción de abogados defensores del Ministerio:", options: ["a) Defender agresores.", "b) Denunciar delitos contra integridad de estudiantes.", "c) Cobrar asesoría.", "d) Decidir escalafón."], correct: 1, retro: "Deben adherirse a procesos seguidos contra personal sindicado [43]." },
+            { q: "42. ¿Qué es 'Vivir Bien' en convivencia?", options: ["a) Vivir mejor.", "b) Vivir en equilibrio con lo que nos rodea y la comunidad.", "c) Bienes materiales.", "d) No escuela."], correct: 1, retro: "Significa vivir bien contigo y conmigo, no vivir mejor [42]." },
+            { q: "43. Según Ley 070, la educación debe ser:", options: ["a) Selectiva.", "b) Promotora de convivencia pacífica y erradicadora de violencia.", "c) Teórica.", "d) Sin problemas."], correct: 1, retro: "Contribuye al desarrollo de una sociedad en cultura de paz [44]." },
+            { q: "44. Castigo físico prohibido en Bolivia según:", options: ["a) Voluntad director.", "b) Ley N° 548, incluso como medida disciplinaria.", "c) Si llora mucho.", "d) Opcional."], correct: 1, retro: "El sometimiento a castigos físicos que degraden dignidad es infracción [45]." },
+            { q: "45. ¿Qué hace un maestro si sospecha violencia intrafamiliar?", options: ["a) Reclamar a casa.", "b) Comunicar a dirección para derivación a Defensoría (DNA).", "c) Ignorar.", "d) Más tarea."], correct: 1, retro: "Se sugiere intervención inmediata y derivación a la instancia de protección [25, 46]." },
+            { q: "46. Indicador de negligencia parental:", options: ["a) Médico cuando enfermo.", "b) No proveer alimentación teniendo recursos.", "c) Revisar tareas.", "d) Abrazos."], correct: 1, retro: "Es una forma pasiva de violencia por descuido de obligaciones [7, 47]." },
+            { q: "47. Acción del maestro para prevenir violencia:", options: ["a) Diálogo y evitar autoritarismo.", "b) Comparar alumnos.", "c) Permitir golpes.", "d) No sexualidad."], correct: 0, retro: "Estimular capacidad de opinar y disentir respetuosamente [41, 48]." },
+            { q: "48. En proceso administrativo, 'Observado Preventivo' es:", options: ["a) Premio.", "b) Suspensión de funciones ante imputación por delitos graves.", "c) Uso anteojos.", "d) Felicitación RDA."], correct: 1, retro: "Medida de seguridad para proteger a los estudiantes [49, 50]." },
+            { q: "49. La resiliencia se define como:", options: ["a) Olvidar malo.", "b) Capacidad de sobreponerse y adaptarse ante adversidad.", "c) Pelear mejor.", "d) Sin sentimientos."], correct: 1, retro: "Permite desarrollar competencia social pese al estrés grave [51]." },
+            { q: "50. ¿Responsabilidad final con la víctima?", options: ["a) Fin en denuncia.", "b) No concluye en derivación; garantizar protección continua.", "c) Solo policía.", "d) Según notas."], correct: 1, retro: "Se debe garantizar una respuesta oportuna e interinstitucional eficaz [52]." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = questions.length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIdx) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    const allOpts = list.querySelectorAll('li');
+                    allOpts.forEach(l => l.style.backgroundColor = '#fff');
+                    li.style.backgroundColor = '#f1f3f5';
+                    showFeedback(index, optIdx === item.correct);
+                };
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feedback = document.createElement('div');
+            feedback.id = `feedback-${index}`;
+            feedback.className = 'feedback';
+            card.appendChild(feedback);
+            container.appendChild(card);
+        });
+
+        function showFeedback(qIdx, isCorrect) {
+            const fDiv = document.getElementById(`feedback-${qIdx}`);
+            fDiv.style.display = 'block';
+            if (isCorrect) {
+                registrarRespuesta(qIdx, true);
+                fDiv.innerText = questions[qIdx].retro;
+                fDiv.className = 'feedback correct';
+            } else {
+                registrarRespuesta(qIdx, false);
+                fDiv.innerText = "vuelve a analizar la pregunta";
+                fDiv.className = 'feedback incorrect';
+            }
+        }
+    </script>
+</body>
+</html>

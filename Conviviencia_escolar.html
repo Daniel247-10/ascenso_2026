@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Convivencia Escolar</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f0f4f1; color: #2c3e50; }
+        h1 { text-align: center; color: #1b5e20; border-bottom: 4px solid #1b5e20; padding-bottom: 10px; text-transform: uppercase; }
+        .question-card { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 8px solid #1b5e20; }
+        .question-text { font-size: 1.15em; font-weight: bold; margin-bottom: 15px; color: #1c2833; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; padding: 12px 18px; border: 1px solid #d5dbdb; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; background: #fff; }
+        .options li:hover { background-color: #e8f5e9; border-color: #1b5e20; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: fadeIn 0.4s; }
+        .correct { background-color: #c8e6c9; color: #1b5e20; border-left: 5px solid #2e7d32; }
+        .incorrect { background-color: #ffcdd2; color: #b71c1c; border-left: 5px solid #c62828; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Convivencia Escolar y Resolución de Conflictos</h1>
+    <div id="quiz-container"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const quizData = [
+            { q: "1. Según el modelo ecológico, ¿cuál es el nivel que indaga cómo las relaciones cercanas aumentan el riesgo de victimización?", options: ["a) Nivel Individual.", "b) Nivel Relacional.", "c) Nivel Comunitario.", "d) Nivel Social."], correct: 1, retro: "Retroalimentación: El nivel relacional examina las interacciones con compañeros, pareja y familia que configuran el comportamiento (Fuente [9])." },
+            { q: "2. ¿Qué organismo define la violencia como el 'uso deliberado de la fuerza física o el poder contra uno mismo u otro'?", options: ["a) UNESCO.", "b) Organización Mundial de la Salud (OMS).", "c) UNICEF.", "d) Consejo de Europa."], correct: 1, retro: "Retroalimentación: La OMS define la violencia centrándose en la intencionalidad del uso del poder y sus consecuencias (Fuente [5])." },
+            { q: "3. El modelo ecológico se aplicó inicialmente al estudio de:", options: ["a) El bullying.", "b) El maltrato de menores en los años setenta.", "c) La deserción escolar.", "d) Conflictos curriculares."], correct: 1, retro: "Retroalimentación: Introducido en los setenta, se usó originalmente para comprender el maltrato infantil (Fuente [1])." },
+            { q: "4. ¿A qué nivel corresponden los factores que crean un 'clima de aceptación de la violencia' en la sociedad?", options: ["a) Relacional.", "b) Comunitario.", "c) Individual.", "d) Social."], correct: 3, retro: "Retroalimentación: El nivel social examina factores generales que determinan las tasas de violencia en la sociedad (Fuente [9])." },
+            { q: "5. En prevención, las intervenciones 'secundarias' se caracterizan por:", options: ["a) Prevenir antes de que ocurra.", "b) Respuestas más inmediatas después de un acto violento.", "c) Atención prolongada para reparación.", "d) Reformas curriculares."], correct: 1, retro: "Retroalimentación: Las medidas secundarias actúan en el tiempo inmediato posterior al fenómeno violento (Fuente [7])." },
+            { q: "6. ¿Qué perspectiva considera el conflicto como interrelación que influye en el desarrollo ético?", options: ["a) Industrial.", "b) Socio-crítica.", "c) Tecnocrática.", "d) Administrativa."], correct: 1, retro: "Retroalimentación: Supone una nueva forma de abordar conflictos como construcción colectiva (Fuente [10])." },
+            { q: "7. El concepto de 'Escuelas Pacíficas' se basa en un paradigma:", options: ["a) Economicista.", "b) Humanista y comunicativo.", "c) Punitivo.", "d) Burocrático."], correct: 1, retro: "Retroalimentación: Estas escuelas favorecen espacios de confianza y consenso (Fuente [11])." },
+            { q: "8. ¿Cuál es la 'ecuación' básica del modelo ecológico para reducir la violencia?", options: ["a) Aumentar sanciones.", "b) Reducir factores de riesgo y aumentar los de protección.", "c) Aumentar burocracia.", "d) Reducir comunicación."], correct: 1, retro: "Retroalimentación: El enfoque busca analizar la situación equilibrando riesgos y protecciones (Fuente [12])." },
+            { q: "9. El compromiso de 'Totalidad' en la convivencia significa:", options: ["a) Actuaciones ligadas.", "b) Implicación de todos los miembros de la comunidad educativa.", "c) Mejorar relaciones externas.", "d) Cumplir el reglamento."], correct: 1, retro: "Retroalimentación: La totalidad implica que la política de prevención incluya a cada sector escolar (Fuente [13])." },
+            { q: "10. Los programas de 'Tolerancia Cero' son de naturaleza:", options: ["a) Proactiva.", "b) Reactiva y centrada en la sanción.", "c) Basada en mediación.", "d) Orientada a conducta equitativa."], correct: 1, retro: "Retroalimentación: Son reactivos y aplican la sanción ante actos de indisciplina (Fuente [7])." },
+            { q: "11. Desde la perspectiva de género, la violencia contra la mujer es:", options: ["a) Biológica.", "b) Un problema social transmitido por procesos de socialización.", "c) Falta de fuerza.", "d) Fenómeno de guerra."], correct: 1, retro: "Retroalimentación: Es un problema social con serias repercusiones para mujeres y niñas (Fuente [14])." },
+            { q: "12. Las señas de identidad de una escuela con perspectiva de género incluyen:", options: ["a) Separación por sexos.", "b) Coeducación sentimental e igualdad.", "c) Más materias técnicas.", "d) Prohibir juegos."], correct: 1, retro: "Retroalimentación: Se busca una 'coeducación sentimental' basada en principios de igualdad y respeto (Fuente [15, 16])." },
+            { q: "13. La revisión curricular con perspectiva de género busca:", options: ["a) Eliminar figuras masculinas.", "b) Eliminar estereotipos sexistas en los textos.", "c) Aumentar educación física.", "d) Sustituir valores."], correct: 1, retro: "Retroalimentación: Se trata de eliminar estereotipos incorporando aportaciones de mujeres a la historia (Fuente [17])." },
+            { q: "14. El 'clima escolar' se define principalmente como:", options: ["a) Meteorología.", "b) Interacciones y transacciones en la tarea educativa.", "c) Equipamiento tecnológico.", "d) Cantidad de alumnos."], correct: 1, retro: "Retroalimentación: Es el conjunto de interacciones generadas en una situación espacio-temporal dada (Fuente [2])." },
+            { q: "15. Un eje del clima escolar que permite valorarlo es:", options: ["a) Impunidad.", "b) Clima de justicia y pertenencia.", "c) Ingresos de padres.", "d) Antigüedad edificio."], correct: 1, retro: "Retroalimentación: Se identifican cinco ejes: relacional, educativo, seguridad, justicia y pertenencia (Fuente [18])." },
+            { q: "16. Un 'clima educativo' positivo implica:", options: ["a) Normas rígidas.", "b) Alcance de metas académicas y bienestar personal.", "c) Sin evaluaciones.", "d) Cumplir currículo sin contexto."], correct: 1, retro: "Retroalimentación: Favorece la educación en valores y da sentido a los aprendizajes (Fuente [19])." },
+            { q: "17. El 'clima de seguridad' en la escuela remite a:", options: ["a) Guardias armados.", "b) Orden y tranquilidad para la enseñanza-aprendizaje.", "c) Uniformes llamativos.", "d) Sin recreos."], correct: 1, retro: "Retroalimentación: Remite al orden necesario para que se produzca el proceso educativo (Fuente [20])." },
+            { q: "18. Percibir legitimidad y equidad en las reglas aplicadas refiere al:", options: ["a) Clima Relacional.", "b) Clima de Justicia.", "c) Clima de Pertenencia.", "d) Clima Competitivo."], correct: 1, retro: "Retroalimentación: Se reconoce la legitimidad de las reglas sin arbitrariedad (Fuente [21])." },
+            { q: "19. El 'clima de pertenencia' se basa en:", options: ["a) Marchas obligatorias.", "b) Asunción de responsabilidades y normas consensuadas.", "c) Rechazo a externos.", "d) Seguir al líder."], correct: 1, retro: "Retroalimentación: Permite la cohesión de los grupos y favorece lazos estables (Fuente [21])." },
+            { q: "20. La 'micropolítica' es vital porque:", options: ["a) Define pintura.", "b) Influencia interpersonal y negociaciones informales afectan la organización.", "c) Permite faltas.", "d) Es política partidaria."], correct: 1, retro: "Retroalimentación: Los centros son territorios donde las negociaciones entre bastidores son importantes (Fuente [2, 22])." },
+            { q: "21. Una categoría de práctica educativa que influye en el clima es:", options: ["a) Buffet escolar.", "b) El reglamento escolar y sistema de reconocimiento.", "c) Marca de libros.", "d) Horario administrativo."], correct: 1, retro: "Retroalimentación: El reglamento es un instrumento valioso de prevención de conductas indeseables (Fuente [8, 23])." },
+            { q: "22. La intervención del profesorado ante el comportamiento debe:", options: ["a) Ignorar conductas.", "b) Proporcionar atención uniforme ante la tarea.", "c) Sanción física.", "d) Calificación sin supervisión."], correct: 1, retro: "Retroalimentación: Se debe mantener una actitud uniforme y constante ante el trabajo del alumno (Fuente [24])." },
+            { q: "23. El reglamento escolar se fundamenta en el:", options: ["a) Miedo.", "b) Respeto a la integridad y dignidad personal.", "c) Permisividad.", "d) Castigo sin dignidad."], correct: 1, retro: "Retroalimentación: Se fundamenta en el principio de respeto a la integridad y refuerzo de la autoestima (Fuente [8])." },
+            { q: "24. Autor que asocia la 'escolarización de las emociones' con la inteligencia emocional:", options: ["a) Piaget.", "b) Goleman (1997).", "c) Freire.", "d) Vygotsky."], correct: 1, retro: "Retroalimentación: Goleman destaca el control de las emociones para el bienestar personal (Fuente [25])." },
+            { q: "25. El 'liderazgo facilitador' se traduce en:", options: ["a) Decisión solitaria.", "b) Colaboración recíproca entre dirección y profesorado.", "c) Sin autoridad.", "d) Órdenes externas."], correct: 1, retro: "Retroalimentación: Se traduce en una estrecha colaboración para la investigación e innovación (Fuente [26])." },
+            { q: "26. Rozenblum (1998) define el conflicto como:", options: ["a) Enfermedad social.", "b) Parte natural de la vida; simplemente existe.", "c) Pérdida de tiempo.", "d) Indisciplina grave."], correct: 1, retro: "Retroalimentación: El conflicto es inherente a las relaciones humanas (Fuente [6])." },
+            { q: "27. Según Jares (1999), un conflicto ocurre cuando hay:", options: ["a) Mismos intereses.", "b) Metas opuestas o valores antagónicos.", "c) Sin contacto.", "d) Seguir reglamento."], correct: 1, retro: "Retroalimentación: Ocurre cuando se perciben metas o intereses divergentes (Fuente [6, 27])." },
+            { q: "28. Conflicto referido a formas de conocer y legitimar saberes:", options: ["a) Relacional.", "b) Curricular.", "c) Cultural.", "d) Social."], correct: 1, retro: "Retroalimentación: El conflicto curricular atiende a discrepancias en el proceso de enseñanza-aprendizaje (Fuente [28])." },
+            { q: "29. Un conflicto de tipo 'cultural' se manifiesta en:", options: ["a) Horarios.", "b) Representaciones simbólicas y contradicciones de cultura formal/invisible.", "c) Falta materiales.", "d) Diferencia salarial."], correct: 1, retro: "Retroalimentación: Desvela las contradicciones entre la cultura escolar formal y la invisible (Fuente [28])." },
+            { q: "30. El origen de un conflicto puede deberse a:", options: ["a) Exceso recursos.", "b) Escasez de recursos y uso de poder.", "c) Normas perfectas.", "d) Sin diferencias."], correct: 1, retro: "Retroalimentación: Causas comunes son la escasez de recursos y el predominio cultural (Fuente [29])." },
+            { q: "31. La resolución violenta de un conflicto viola:", options: ["a) El gusto personal.", "b) Integridad física y derechos de la persona.", "c) Arquitectura edificio.", "d) Horario recreo."], correct: 1, retro: "Retroalimentación: Los conflictos resueltos violentamente constituyen una violación a la integridad (Fuente [29])." },
+            { q: "32. Requisito de Lederach (1989) para intervenir con éxito:", options: ["a) Ignorar origen.", "b) Clarificar origen, estructura y magnitud del problema.", "c) Dejar pelear.", "d) Imponer solución."], correct: 1, retro: "Retroalimentación: Es vital clarificar quién está involucrado y qué influye (Fuente [30])." },
+            { q: "33. La 'provención' (John Burton) se define como:", options: ["a) Castigar antes.", "b) Anticiparse a los conflictos antes de que estallen.", "c) Prohibir debate.", "d) Ignorar problemas."], correct: 1, retro: "Retroalimentación: Significa anticiparse para que no generen manifestaciones negativas (Fuente [31, 32])." },
+            { q: "34. Un proceso de resolución 'justo' significa:", options: ["a) Maestro siempre razón.", "b) Cada parte expresa libremente puntos de vista y sentimientos.", "c) Sanción fuerte.", "d) Sorteo culpa."], correct: 1, retro: "Retroalimentación: Ser escuchado con respeto y sin interrumpir es clave (Fuente [3, 33])." },
+            { q: "35. 'Despersonalizar la disputa' consiste en:", options: ["a) Ignorar personas.", "b) Separar a las personas del problema.", "c) Atacar a la persona.", "d) Hablar con padres."], correct: 1, retro: "Retroalimentación: Permite centrarse en los intereses y no en ataques personales (Fuente [4])." },
+            { q: "36. En una negociación razonada (Fisher y Ury) se debe:", options: ["a) Usar fuerza.", "b) Concentrarse en los intereses y no en posiciones.", "c) Ganar a toda costa.", "d) Inflexibilidad."], correct: 1, retro: "Retroalimentación: Identificar intereses permite soluciones ventajosas mutuas (Fuente [4, 34])." },
+            { q: "37. La mediación escolar implica la intervención de:", options: ["a) El director.", "b) Tercera persona imparcial que anima al acuerdo.", "c) Juicio público.", "d) Fuerza física."], correct: 1, retro: "Retroalimentación: Es la intervención de un tercero neutral para facilitar acuerdos (Fuente [3, 35, 36])." },
+            { q: "38. Principio fundamental de la mediación escolar:", options: ["a) Obligatoriedad.", "b) Voluntariedad de las partes.", "c) Publicidad total.", "d) Pago tarifa."], correct: 1, retro: "Retroalimentación: La voluntariedad es esencial para incorporarse a la dinámica (Fuente [3, 37])." },
+            { q: "39. El rol del 'conciliador' es:", options: ["a) Imponer solución.", "b) Sugerir soluciones satisfactorias como tercero neutral.", "c) Arbitrar.", "d) Ignorar conflicto."], correct: 1, retro: "Retroalimentación: El conciliador propone soluciones posibles para examen de las partes (Fuente [35])." },
+            { q: "40. El 'arbitraje' escolar es el proceso donde:", options: ["a) Hay perdón mutuo.", "b) Se somete la solución a la decisión de un árbitro elegido.", "c) Sorteo solución.", "d) Disculpa escrita."], correct: 1, retro: "Retroalimentación: Las partes someten la solución a un árbitro por su autoridad (Fuente [29, 35])." },
+            { q: "41. Condición para la participación efectiva en mediación:", options: ["a) Evitar expulsión.", "b) Ser honesto y sincero.", "c) Recibir premio.", "d) Acusar mejor."], correct: 1, retro: "Retroalimentación: La sinceridad es base para reconstruir la confianza (Fuente [3])." },
+            { q: "42. Estilo 'Pierdo / Ganas' corresponde a:", options: ["a) Cooperación.", "b) Acomodación.", "c) Competición.", "d) Evasión."], correct: 1, retro: "Retroalimentación: El estilo de acomodación implica ceder ante el otro (Fuente [38])." },
+            { q: "43. Estilo que busca 'Gano / Ganas':", options: ["a) Competición.", "b) Acomodación.", "c) Cooperación y Negociación Razonada.", "d) Evasión."], correct: 2, retro: "Retroalimentación: Permite una manera compartida de crecer y mejorarse (Fuente [38, 39])." },
+            { q: "44. La fase de 'Implantación' consiste en:", options: ["a) Identificar actitudes.", "b) Poner en marcha el proyecto y constituir equipo.", "c) Evaluación final.", "d) Escribir informe."], correct: 1, retro: "Retroalimentación: En esta fase se rentabiliza el uso del proyecto escolar (Fuente [40, 41])." },
+            { q: "45. Etapa mediadora donde se clarifica el problema:", options: ["a) Colaboración inicial.", "b) Análisis de los problemas.", "c) Elaboración opciones.", "d) Formalización acuerdo."], correct: 1, retro: "Retroalimentación: Permite comprender recíprocamente los intereses del otro (Fuente [42])." },
+            { q: "46. El 'principio de habilidad' (Cortina) implica:", options: ["a) Fuerza física.", "b) Analizar causas e imaginar alternativas positivas.", "c) Saber mentir.", "d) Ignorar sentimientos."], correct: 1, retro: "Retroalimentación: Implica analizar causas y valorar consecuencias (Fuente [43])." },
+            { q: "47. El 'clima relacional' hace referencia a:", options: ["a) Solo Ministerio.", "b) Relaciones entre miembros en dimensión socio-afectiva.", "c) Amigos del director.", "d) Competencia entre colegios."], correct: 1, retro: "Retroalimentación: Se basa en la bondad de los contactos interpersonales (Fuente [18, 23, 44])." },
+            { q: "48. Factor de riesgo individual de violencia:", options: ["a) Uniformes limpios.", "b) Impulsividad, bajo nivel educativo y sustancias.", "c) Tareas a tiempo.", "d) Participar en coro."], correct: 1, retro: "Retroalimentación: Factores biológicos y de historia personal influyen (Fuente [9])." },
+            { q: "49. La Cultura de Paz en el currículo debe ser:", options: ["a) Opcional.", "b) Transversal.", "c) Solo en Cívica.", "d) Para indisciplinados."], correct: 1, retro: "Retroalimentación: Debe estar integrada de manera transversal en el centro (Fuente [27, 37])." },
+            { q: "50. El 'Seguimiento y Balance' en mediación sirve para:", options: ["a) Buscar culpables.", "b) Revisar el acuerdo por las partes en caso necesario.", "c) Cobrar multas.", "d) Publicar secretos."], correct: 1, retro: "Retroalimentación: Consiste en realizar un seguimiento de la solución tomada (Fuente [42])." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = (typeof questions !== 'undefined' ? questions : quizData).length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIndex) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    const feedback = document.getElementById(`feedback-${index}`);
+                    feedback.style.display = 'block';
+                    if (optIndex === item.correct) {
+                        registrarRespuesta(index, true);
+                        feedback.innerText = item.retro;
+                        feedback.className = 'feedback correct';
+                    } else {
+                        registrarRespuesta(index, false);
+                        feedback.innerText = "vuelve a analizar la pregunta";
+                        feedback.className = 'feedback incorrect';
+                    }
+                };
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.id = `feedback-${index}`;
+            feedbackDiv.className = 'feedback';
+            card.appendChild(feedbackDiv);
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

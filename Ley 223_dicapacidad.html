@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Examen - Ley N° 223 Bolivia</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #e8f4f8; color: #333; }
+        h1 { text-align: center; color: #005662; border-bottom: 4px solid #005662; padding-bottom: 10px; text-transform: uppercase; }
+        .question-card { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 8px solid #005662; }
+        .question-text { font-size: 1.15em; font-weight: bold; margin-bottom: 15px; color: #004d40; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; padding: 12px 18px; border: 1px solid #cfd8dc; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; background: #fafafa; }
+        .options li:hover { background-color: #e0f2f1; border-color: #005662; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 500; animation: fadeIn 0.4s; }
+        .correct { background-color: #c8e6c9; color: #1b5e20; border: 1px solid #81c784; }
+        .incorrect { background-color: #ffcdd2; color: #b71c1c; border: 1px solid #e57373; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1>Simulador: Ley General para Personas con Discapacidad (N° 223)</h1>
+    <div id="quiz-container"></div>
+    <div id="resultado-final" style="display:none; margin-top:20px; padding:16px; border-radius:14px; background:#fff; border:1px solid #d9dfe3; font-weight:700;"></div>
+
+    <script>
+        const quizData = [
+            { q: "1. ¿Cuál es el objeto principal de la Ley N° 223?", options: ["a) Sancionar penalmente la discriminación.", "b) Garantizar el ejercicio pleno de derechos y deberes en igualdad de condiciones.", "c) Crear centros de acogida privados.", "d) Eliminar bonos solidarios."], correct: 1, retro: "Retroalimentación: El Artículo 1 establece que la ley garantiza derechos, deberes e igualdad de condiciones bajo un sistema de protección integral." },
+            { q: "2. ¿Cuál de los siguientes es un principio general de la Ley N° 223?", options: ["a) Exclusión selectiva.", "b) Autonomía absoluta.", "c) Inclusión en todos los ámbitos.", "d) Prioridad solo para discapacidad visual."], correct: 2, retro: "Retroalimentación: La inclusión implica que las personas con discapacidad participen plena y efectivamente en la sociedad (Art. 4, c)." },
+            { q: "3. ¿Cómo se define 'Discapacidad' según esta normativa?", options: ["a) Enfermedad mental.", "b) Resultado de la interacción de la persona con deficiencias y diversas barreras.", "c) Problema fisiológico temporal.", "d) Incapacidad total de trabajo."], correct: 1, retro: "Retroalimentación: Se define como el resultado de la interacción con barreras físicas, psicológicas, sociales y culturales (Art. 5, a)." },
+            { q: "4. El 'Trato Preferente' consiste en:", options: ["a) Acciones integradoras para eliminar desventajas y garantizar equiparación.", "b) Entrega de dinero en efectivo.", "c) Eximir de deberes ciudadanos.", "d) Atención solo en salud privada."], correct: 0, retro: "Retroalimentación: Son acciones que procuran eliminar desventajas garantizando primacía en la igualdad (Art. 5, b)." },
+            { q: "5. ¿Qué caracteriza al 'Grado de Discapacidad Grave'?", options: ["a) Personas independientes.", "b) Actividades normales compatibles.", "c) Disminución importante que requiere asistencia para algunas actividades.", "d) Imposibilidad total y asistencia permanente."], correct: 2, retro: "Retroalimentación: El grado grave implica una imposibilidad para realizar la mayoría de actividades diarias (Art. 5, m)." },
+            { q: "6. ¿Qué define a la 'Educación Inclusiva' según la ley?", options: ["a) Escuelas especiales alejadas.", "b) Respuesta a la diversidad mediante adaptaciones físicas, curriculares y apoyos.", "c) Educación solo en casa.", "d) Aprendizaje idéntico sin cambios."], correct: 1, retro: "Retroalimentación: Busca reducir la exclusión mediante adaptaciones para mayor participación (Art. 5, r)." },
+            { q: "7. ¿Cuál es la definición de 'Ajustes Razonables'?", options: ["a) Aumentar sueldo a maestros.", "b) Modificaciones necesarias que no impongan carga desproporcionada.", "c) Comprar tecnología de punta.", "d) Cambiar la Ley 070."], correct: 1, retro: "Retroalimentación: Son adaptaciones adecuadas para garantizar el goce de derechos en casos particulares (Art. 5, v)." },
+            { q: "8. Respecto al Derecho a la Educación, el Estado garantiza:", options: ["a) Solo ingreso a primaria.", "b) Acceso y permanencia en el Sistema Educativo Plurinacional.", "c) Pensión en colegios privados.", "d) Exención de evaluaciones."], correct: 1, retro: "Retroalimentación: Se garantiza el acceso y permanencia en el marco de la educación inclusiva e integral (Art. 10)." },
+            { q: "9. ¿Qué establece la ley sobre el Derecho a la Comunicación?", options: ["a) Braille obligatorio para todos.", "b) Prohíbe lenguaje de señas.", "c) Promueve sistemas y lenguas alternativas para acceso a información.", "d) Solo español para trámites."], correct: 2, retro: "Retroalimentación: El Estado promueve lenguas alternativas para el ejercicio pleno de derechos (Art. 11)." },
+            { q: "10. Sobre el Derecho al Empleo, ¿qué garantiza el Estado?", options: ["a) Cargo jerárquico automático.", "b) Inclusión socio-laboral en igualdad con remuneración justa.", "c) Exención de impuestos salariales.", "d) Trabajo solo agrícola."], correct: 1, retro: "Retroalimentación: Garantiza el acceso a toda forma de trabajo digno con remuneración justa (Art. 13)." },
+            { q: "11. ¿A quiénes se aplica la garantía de Inamovilidad Laboral?", options: ["a) Solo a la persona con discapacidad.", "b) Solo a maestros rurales.", "c) Persona con discapacidad, cónyuges, padres y tutores.", "d) Funcionarios ministeriales."], correct: 2, retro: "Retroalimentación: La protección alcanza a los familiares directos o tutores a cargo del bienestar del NNA (Art. 34, II)." },
+            { q: "12. En el ámbito educativo, el Estado Plurinacional garantiza:", options: ["a) No existencia de tareas.", "b) Formación de equipos multidisciplinarios para atención e inclusión.", "c) Padres como maestros.", "d) Eliminar exámenes de ascenso."], correct: 1, retro: "Retroalimentación: Se garantiza apoyo técnico multidisciplinario para la inclusión efectiva (Art. 31, I)." },
+            { q: "13. Sobre la formación docente, la Ley N° 223 instruye:", options: ["a) No necesitan capacitación.", "b) Planes de estudio que habiliten para enseñanza personalizada a estudiantes con discapacidad.", "c) Solo para maestros de arte.", "d) Reemplazo por médicos."], correct: 1, retro: "Retroalimentación: Los planes de estudio deben incluir psicopedagogía inclusiva para nuevos maestros (Art. 31, III)." },
+            { q: "14. Respecto a las barreras arquitectónicas en las escuelas:", options: ["a) Suprimirlas solo en edificios viejos.", "b) Suprimirlas gradualmente en planos de cualquier unidad educativa a construirse.", "c) Fondos solo de padres.", "d) No necesarias para sordos."], correct: 1, retro: "Retroalimentación: El Estado obligará gradualmente a suprimir barreras en nuevas construcciones (Art. 31, IV)." },
+            { q: "15. ¿Qué beneficio otorga la ley en educación superior?", options: ["a) Ingreso sin bachillerato.", "b) Gratuidad de diplomas académicos y títulos en provisión nacional.", "c) Aprobación automática.", "d) Computadoras gratis."], correct: 1, retro: "Retroalimentación: Todas las universidades deben extender títulos de manera gratuita a personas con discapacidad (Art. 31, VIII)." },
+            { q: "16. ¿Qué debe facilitar el Sistema Universitario a discapacidad sensorial?", options: ["a) Exención de prácticas.", "b) Instrumentos en braille e intérpretes de señas en evaluaciones.", "c) Títulos de otra carrera.", "d) Traducciones nativas."], correct: 1, retro: "Retroalimentación: Deben contar con instrumentos de evaluación adecuados y dotación de apoyo (Art. 31, IX)." },
+            { q: "17. En cuanto a la salud, el Estado garantiza:", options: ["a) Medicamentos gratuitos relacionados con la discapacidad.", "b) Cirugías estéticas parientes.", "c) Médicos a domicilio diario.", "d) Descuentos solo en farmacias."], correct: 0, retro: "Retroalimentación: Se otorgan medicamentos e insumos de necesidad permanente de forma gratuita (Art. 32, II)." },
+            { q: "18. ¿Qué prohíbe la ley en salud reproductiva?", options: ["a) Matrimonio intelectual.", "b) Esterilización obligatoria o anticonceptivos obligatorios.", "c) Información sobre planificación.", "d) Preservativos públicos."], correct: 1, retro: "Retroalimentación: Se salvaguardan derechos contra la esterilización o métodos forzados (Art. 32, VI)." },
+            { q: "19. Instituciones educativas están obligadas a incorporar:", options: ["a) Médico pediatra en aula.", "b) Comunicación alternativa e intérprete LSB en actos de relevancia.", "c) Almuerzo parientes.", "d) Uniformes fluorescentes."], correct: 1, retro: "Retroalimentación: La comunicación alternativa y traducción a LSB es obligatoria en actos relevantes (Art. 36, I)." },
+            { q: "20. ¿Qué es el CONALPEDIS?", options: ["a) Sindicato de maestros.", "b) Comité Nacional para Personas con Discapacidad (Planificación estratégica).", "c) Empresa de sillas de ruedas.", "d) Unidad policial."], correct: 1, retro: "Retroalimentación: Es la entidad descentralizada encargada de la defensa de derechos y planificación (Art. 45)." },
+            { q: "21. El plazo para la denuncia de violencia es:", options: ["a) Asunto privado.", "b) Inmediata para protección del Estado.", "c) Tras lesiones graves.", "d) Fin de año."], correct: 1, retro: "Retroalimentación: La integridad física y mental debe protegerse sin demora (Art. 19)." },
+            { q: "22. Discapacidad intelectual leve/moderada tiene derecho a:", options: ["a) No opinar.", "b) Ser consultada respecto a decisiones sobre su vida, salud y educación.", "c) Pareja elegida por Estado.", "d) Internación permanente."], correct: 1, retro: "Retroalimentación: Tienen derecho a la consulta proyectándose a una vida independiente (Art. 20)." },
+            { q: "23. La familia tiene el deber de:", options: ["a) Encierro por protección.", "b) Proporcionar bienestar promoviendo autonomía y respetando autodeterminación.", "c) Trabajo obligatorio.", "d) Decidir sin consultar."], correct: 1, retro: "Retroalimentación: Es el primer espacio de inclusión y debe promover la autonomía (Art. 7)." },
+            { q: "24. Cuidadores pierden beneficios cuando:", options: ["a) Cumple 18 años.", "b) Limitan oportunidades de desarrollo o cometen violencia y abuso.", "c) Viajan a otro departamento.", "d) Consiguen empleo."], correct: 1, retro: "Retroalimentación: El abuso o maltrato anula los beneficios establecidos en la ley (Art. 21)." },
+            { q: "25. El principio de 'Igualdad en Dignidad' significa:", options: ["a) Más derechos que otros.", "b) Misma dignidad y derechos que el resto de los seres humanos.", "c) Solo con título profesional.", "d) Según el grado."], correct: 1, retro: "Retroalimentación: Se basa en que todas las personas nacen con igual valor humano (Art. 4, a)." },
+            { q: "26. La 'Accesibilidad' incluye adecuación:", options: ["a) Solo parques.", "b) Arquitectónica, física, social, económica y comunicacional.", "c) Vivienda en el centro.", "d) Internet gratuito."], correct: 1, retro: "Retroalimentación: Es la capacidad de acceder a servicios de la sociedad sin restricción (Art. 4, d)." },
+            { q: "27. ¿Qué es la 'Deficiencia'?", options: ["a) Falta de voluntad.", "b) Problemas en funciones fisiológicas o estructuras corporales.", "c) Retraso escolar.", "d) Situación social."], correct: 1, retro: "Retroalimentación: Se refiere a desviaciones significativas respecto a la norma estadística (Art. 5, d)." },
+            { q: "28. Personas con discapacidad auditiva estructuran su experiencia vía:", options: ["a) Oído con audífonos.", "b) Tacto y olfato.", "c) Sentido de la visión.", "d) Equilibrio."], correct: 2, retro: "Retroalimentación: La visión permite su integración ante las barreras comunicacionales (Art. 5, g)." },
+            { q: "29. ¿Qué define a la 'Discapacidad Múltiple'?", options: ["a) Dos enfermedades crónicas.", "b) Generada por múltiples deficiencias (física, visual, etc.).", "c) Sin empleo ni familia.", "d) Hablar varios idiomas."], correct: 1, retro: "Retroalimentación: Concurrencia de deficiencias de distinto carácter (Art. 5, j)." },
+            { q: "30. El 'Grado de Discapacidad muy Grave' requiere:", options: ["a) Trabajar 4 horas.", "b) Asistencia permanente de otra persona.", "c) Baja visión.", "d) No estudiar."], correct: 1, retro: "Retroalimentación: Imposibilita las actividades de la vida diaria y requiere apoyo constante (Art. 5, n)." },
+            { q: "31. Las 'Actividades de la Vida Diaria' incluyen:", options: ["a) Trabajo e impuestos.", "b) Autocuidado (higiene, comer), comunicación y actividades sociales.", "c) Deportes de impacto.", "d) Viajar sin documentos."], correct: 1, retro: "Retroalimentación: Son funciones comunes de autocuidado y relación social (Art. 5, o)." },
+            { q: "32. La 'Inclusión Social' vincula:", options: ["a) Regalos Navidad.", "b) Desarrollo de capacidades con acceso igualitario a oportunidades.", "c) Barrios cerrados.", "d) Filas del banco."], correct: 1, retro: "Retroalimentación: Es un proceso multifactorial para el ejercicio de la ciudadanía (Art. 5, q)." },
+            { q: "33. La 'Rehabilitación Basada en la Comunidad' (RBC) es:", options: ["a) Técnica hospitalaria.", "b) Estrategia para igualdad e integración en su propia comunidad.", "c) Vecinos pagan pago.", "d) Traslado rural."], correct: 1, retro: "Retroalimentación: Busca reducir la pobreza y lograr integración social local (Art. 5, t)." },
+            { q: "34. El Estado garantiza el Derecho a la Vida:", options: ["a) Sin deficiencias.", "b) Desde la concepción.", "c) Si la familia paga.", "d) Tras carnetización."], correct: 1, retro: "Retroalimentación: El derecho a la vida se garantiza desde la concepción (Art. 6)." },
+            { q: "35. Si queda en estado de abandono u orfandad:", options: ["a) Junta vecinal.", "b) Estado asume responsabilidad de acuerdo a competencias.", "c) Traslado de país.", "d) Pierde derechos civiles."], correct: 1, retro: "Retroalimentación: El Estado asume la protección en todos sus niveles (Art. 9, II)." },
+            { q: "36. El Derecho a la Identidad implica:", options: ["a) Carnet de color diferente.", "b) Respeto a pluriculturalidad, nombre y nacionalidad.", "c) Sin documentos.", "d) Cambio de nombre."], correct: 1, retro: "Retroalimentación: Garantiza el registro inmediato tras el nacimiento (Art. 14)." },
+            { q: "37. Sobre el Derecho a la Vivienda, la ley establece:", options: ["a) Casa de lujo gratis.", "b) Programas de vivienda digna con porcentaje de presupuesto social.", "c) No pueden ser dueños.", "d) Desalojo centros."], correct: 1, retro: "Retroalimentación: Se priorizan proyectos adecuados para personas con discapacidad (Art. 15)." },
+            { q: "38. Derecho a la Participación Política garantiza:", options: ["a) No obligación votar.", "b) Participación plena en igualdad en actividades políticas.", "c) Voto público.", "d) Solo candidatos físicos."], correct: 1, retro: "Retroalimentación: Garantiza la participación efectiva en igualdad de condiciones (Art. 18, I)." },
+            { q: "39. El TSE debe permitir como ajuste razonable:", options: ["a) Voto telefónico.", "b) Ingreso acompañados de una persona de confianza.", "c) Eliminar mesas lejanas.", "d) Decidir ganador."], correct: 1, retro: "Retroalimentación: Esto permite el voto libre y consciente con ayuda necesaria (Art. 18, II)." },
+            { q: "40. ¿Quiénes deben informarse sobre prevención de abuso sexual?", options: ["a) Solo mujeres.", "b) Policías y jueces.", "c) Discapacidad, familias y personal que trabaja con NNA.", "d) Nadie."], correct: 2, retro: "Retroalimentación: La información es clave para prevenir el abuso en grupos vulnerables (Art. 19, II)." },
+            { q: "41. Es un DEBER de las personas con discapacidad:", options: ["a) No cumplir leyes.", "b) Capacitarse según posibilidades para independencia.", "c) Estado paga deudas.", "d) No carnetización."], correct: 1, retro: "Retroalimentación: Incluye capacitarse y prepararse para ser productivo (Art. 22, k)." },
+            { q: "42. Gobiernos autónomos deben priorizar:", options: ["a) Planes de promoción e inclusión social para reducción de pobreza.", "b) Impuestos más altos.", "c) Estadios de fútbol.", "d) Comida anual."], correct: 0, retro: "Retroalimentación: Busca eliminar exclusión y superar marginalidad social (Art. 23)." },
+            { q: "43. Sobre el acceso al crédito, entidades financieras deben:", options: ["a) Prohibir préstamos.", "b) Eliminar aspectos restrictivos ajenos a la capacidad de reembolso.", "c) Triple interés.", "d) Solo discapacidad grave."], correct: 1, retro: "Retroalimentación: Se busca superar la exclusión financiera (Art. 25, II)." },
+            { q: "44. La Renta Solidaria NO podrá ser percibida por:", options: ["a) Discapacidad grave.", "b) Discapacidad visual o quienes trabajen en sector público.", "c) Tutores NNA.", "d) Area rural."], correct: 1, retro: "Retroalimentación: El Art. 28 especifica estas exclusiones para el beneficio (Art. 28, II)." },
+            { q: "45. Atribución de Asambleas Departamentales:", options: ["a) Cambiar nombres.", "b) Normas sobre especificaciones técnicas para eliminar barreras.", "c) Quién va a escuela.", "d) Peajes especiales."], correct: 1, retro: "Retroalimentación: Tienen potestad para dictar normas de diseño accesible (Art. 48, I)." },
+            { q: "46. Gratuidad de Libreta Militar se aplica a:", options: ["a) Padres.", "b) Personas con discapacidad que requieran el documento.", "c) Maestros especial.", "d) Directores centros."], correct: 1, retro: "Retroalimentación: Se establece la gratuidad del trámite para este colectivo (Art. 40)." },
+            { q: "47. Obligados a capacitar personal en Lengua de Señas:", options: ["a) Transporte internacional.", "b) Instituciones públicas, servicios privados y Unidades Educativas.", "c) Centros comerciales.", "d) Ninguna."], correct: 1, retro: "Retroalimentación: La atención inclusiva requiere personal capacitado en señas (Art. 36, III)." },
+            { q: "48. Desarrollo Inclusivo Basado en la Comunidad busca:", options: ["a) Misma fábrica.", "b) Igualdad independientemente de condición, género o cultura.", "c) Traslado indígena.", "d) Separar niños."], correct: 1, retro: "Retroalimentación: Procuran el desarrollo humano en equilibrio con el ambiente (Art. 5, u)." },
+            { q: "49. Rol de medios de comunicación:", options: ["a) Ignorar temática.", "b) Concientizar sobre situación y eliminar lenguaje discriminatorio.", "c) Mostrar solo éxito.", "d) Cobrar anuncios."], correct: 1, retro: "Retroalimentación: Los medios deben sensibilizar sobre derechos y necesidades (Art. 39)." },
+            { q: "50. La transversalidad significa inclusión de la temática en:", options: ["a) Una sola ley.", "b) Todo régimen normativo, planes, programas y proyectos del Estado.", "c) Solo Salud.", "d) Un solo día."], correct: 1, retro: "Retroalimentación: Debe atravesar todas las políticas y competencias públicas (Art. 43)." }
+        ];
+
+        const container = document.getElementById('quiz-container');
+        const resumenFinal = document.getElementById('resultado-final');
+        let aciertos = 0;
+        const respuestas = {};
+
+        function actualizarResumen() {
+            const totalPreguntas = (typeof questions !== 'undefined' ? questions : quizData).length;
+            const porcentaje = totalPreguntas ? (aciertos / totalPreguntas) * 100 : 0;
+            resumenFinal.style.display = 'block';
+            resumenFinal.innerHTML = `Porcentaje de acertividad: ${porcentaje.toFixed(2)}%<br>Aciertos: ${aciertos} / ${totalPreguntas}`;
+        }
+
+        function registrarRespuesta(qIdx, esCorrecta) {
+            if (respuestas[qIdx] !== undefined) return;
+            respuestas[qIdx] = esCorrecta;
+            if (esCorrecta) {
+                aciertos++;
+            }
+            actualizarResumen();
+        }
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<div class="question-text">${item.q}</div>`;
+            
+            const list = document.createElement('ul');
+            list.className = 'options';
+            
+            item.options.forEach((opt, optIdx) => {
+                const li = document.createElement('li');
+                li.innerText = opt;
+                li.onclick = () => {
+                    const feedbackDiv = document.getElementById(`feedback-${index}`);
+                    feedbackDiv.style.display = 'block';
+                    if (optIdx === item.correct) {
+                        registrarRespuesta(index, true);
+                        feedbackDiv.innerText = item.retro;
+                        feedbackDiv.className = 'feedback correct';
+                    } else {
+                        registrarRespuesta(index, false);
+                        feedbackDiv.innerText = "vuelve a analizar la pregunta";
+                        feedbackDiv.className = 'feedback incorrect';
+                    }
+                };
+                list.appendChild(li);
+            });
+            
+            card.appendChild(list);
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.id = `feedback-${index}`;
+            feedbackDiv.className = 'feedback';
+            card.appendChild(feedbackDiv);
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
