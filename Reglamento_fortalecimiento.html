@@ -76,6 +76,7 @@
             { q: "49. Dependencia administrativa de maestros de apoyo:", options: ["a) Unidad regular.", "b) Centro de Educación Especial (CEE).", "c) Vecinos.", "d) Min. Trabajo."], correct: 1, retro: "Retroalimentación: El Artículo 56a establece que dependen directamente de los CEE." },
             { q: "50. ¿Este reglamento modifica el Escalafón Docente?", options: ["a) Sí, nuevas categorías.", "b) No modifican el Escalafón docente.", "c) Solo antigüedad.", "d) Solo en superior."], correct: 1, retro: "Retroalimentación: La Disposición Final Segunda aclara que la estructura del escalafón se mantiene intacta." }
         ];
+        shuffleOptions(quizData);
 
         const container = document.getElementById('quiz-container');
         const resumenFinal = document.getElementById('resultado-final');

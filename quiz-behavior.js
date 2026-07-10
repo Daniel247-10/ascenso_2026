@@ -1,4 +1,35 @@
 (function () {
+  // ======= SHUFFLE OPTIONS FUNCTION =======
+  function shuffleOptions(questionsArray) {
+    if (!Array.isArray(questionsArray)) return questionsArray;
+
+    questionsArray.forEach(item => {
+      // Determine if this item uses 'options'/'correct' or 'o'/'a' pattern
+      const opts = item.options || item.o;
+      if (!Array.isArray(opts) || opts.length === 0) return;
+
+      const correctKey = item.options !== undefined ? 'correct' : 'a';
+      const originalCorrectIndex = (correctKey === 'correct') ? item.correct : item.a;
+      const originalCorrectValue = opts[originalCorrectIndex];
+
+      // Fisher-Yates shuffle
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
+      }
+
+      // Find new correct index
+      const newCorrectIndex = opts.indexOf(originalCorrectValue);
+      if (correctKey === 'correct') {
+        item.correct = newCorrectIndex;
+      } else {
+        item.a = newCorrectIndex;
+      }
+    });
+
+    return questionsArray;
+  }
+
   function addSharedStyles() {
     if (document.getElementById('quiz-behavior-styles')) return;
 
@@ -128,10 +159,10 @@
 
   function escapeHtml(value) {
     return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/&/g, '&')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
       .replace(/'/g, '&#039;');
   }
 
@@ -470,8 +501,56 @@
     document.body.appendChild(actionBar);
   }
 
+  // ======= SHUFFLE STATIC QUIZ OPTIONS =======
+  function shuffleStaticOptions() {
+    const blocks = document.querySelectorAll('.question-block');
+    if (!blocks.length) return;
+
+    blocks.forEach(block => {
+      const optionsContainer = block.querySelector('.options');
+      if (!optionsContainer) return;
+
+      const labels = Array.from(optionsContainer.querySelectorAll('label'));
+      if (labels.length < 2) return;
+
+      // Store the correct value from respuestasCorrectas for this question
+      const questionId = labels[0].querySelector('input')?.getAttribute('data-qid');
+      if (!questionId) return;
+
+      const correctValue = typeof respuestasCorrectas !== 'undefined' ? respuestasCorrectas[questionId] : null;
+      if (!correctValue) return;
+
+      // Get the original correct label's text
+      let correctLabelText = '';
+      labels.forEach(label => {
+        const input = label.querySelector('input');
+        if (input && input.value === correctValue) {
+          correctLabelText = label.textContent.trim();
+        }
+      });
+
+      if (!correctLabelText) return;
+
+      // Fisher-Yates shuffle on the labels array
+      for (let i = labels.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        optionsContainer.appendChild(labels[j]);
+      }
+
+      // After shuffling, find which value now has the correct text and update respuestasCorrectas
+      const reorderedLabels = Array.from(optionsContainer.querySelectorAll('label'));
+      reorderedLabels.forEach(label => {
+        const input = label.querySelector('input');
+        if (input && label.textContent.trim() === correctLabelText) {
+          respuestasCorrectas[questionId] = input.value;
+        }
+      });
+    });
+  }
+
   addSharedStyles();
   ensureQuizControls();
+  shuffleStaticOptions();
   document.addEventListener('click', handleListOption, true);
   document.addEventListener('click', handleGeneratedRadio, true);
   document.addEventListener('click', handleStaticRadio, true);

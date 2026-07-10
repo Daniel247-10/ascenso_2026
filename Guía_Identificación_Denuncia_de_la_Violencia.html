@@ -71,6 +71,7 @@
             { q: "49. Si un maestro recibe amenazas por denunciar puede:", options: ["a) Retirar denuncia.", "b) Demandar por intimidación y solicitar protección.", "c) Renunciar.", "d) Pedir perdón."], correct: 1, retro: "Retroalimentación: El sistema debe proteger al denunciante y su familia (Fuente [42])." },
             { q: "50. En emergencia médica por violencia, la autoridad debe:", options: ["a) Esperar padres.", "b) Acompañar al estudiante al centro de salud más cercano.", "c) Enviar en taxi.", "d) Llamar prensa."], correct: 1, retro: "Retroalimentación: La prioridad es la salud, notificando luego a la familia (Fuente [43])." }
         ];
+        shuffleOptions(quizData);
 
         const container = document.getElementById('quiz-container');
         const resumenFinal = document.getElementById('resultado-final');

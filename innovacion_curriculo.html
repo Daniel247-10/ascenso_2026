@@ -43,6 +43,7 @@
             { q: "21. ¿Qué es un 'modelo mental'?", options: ["a) Un plano arquitectónico.", "b) Estructuras de pensamiento que condicionan cómo vemos el mundo.", "c) Un currículo nacional.", "d) Una técnica de estudio."], correct: 1, retro: "Condicionan la valoración de nosotros y de los demás, incluyendo prejuicios [11]." },
             { q: "22. La innovación es un 'proceso en espiral' porque:", options: ["a) Es confuso.", "b) Cada fase se relaciona con la anterior y la siguiente.", "c) No avanza.", "d) Se repite siempre igual."], correct: 1, retro: "Implica una evolución donde la evaluación realimenta la intencionalidad [22, 25]." }
         ];
+        shuffleOptions(questions);
 
         const container = document.getElementById('quiz');
         const resumenFinal = document.getElementById('resultado-final');
