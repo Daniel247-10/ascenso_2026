@@ -444,13 +444,13 @@
 
     const finishButton = document.createElement('button');
     finishButton.type = 'button';
-    finishButton.textContent = 'Finalizar Cuestionario';
+    finishButton.textContent = 'Finalizar';
     finishButton.addEventListener('click', finishQuiz);
 
     const menuLink = document.createElement('a');
     menuLink.href = 'index.html';
     menuLink.className = 'btn';
-    menuLink.textContent = 'Men\u00fa Principal';
+    menuLink.textContent = 'Men\u00fa';
 
     actionBar.appendChild(finishButton);
     actionBar.appendChild(menuLink);
