@@ -29,36 +29,40 @@
       .quiz-action-bar {
         position: fixed;
         left: 50%;
-        bottom: 16px;
+        bottom: 0;
         z-index: 2000;
+        transform: translateX(-50%);
         display: flex;
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 10px;
-        width: min(920px, calc(100% - 24px));
+        width: min(920px, calc(100% - 16px));
         margin: 0;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.94);
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.96);
         border: 1px solid rgba(226, 221, 247, 0.9);
-        border-radius: 18px;
-        box-shadow: 0 12px 30px rgba(74, 51, 160, 0.18);
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -8px 24px rgba(74, 51, 160, 0.16);
         backdrop-filter: blur(8px);
-        transform: translateX(-50%);
+        overflow-x: auto;
       }
 
       .quiz-action-bar .btn,
       .quiz-action-bar button {
         display: inline-block;
+        flex: 0 0 auto;
+        white-space: nowrap;
         background: linear-gradient(135deg, #6a4dbf 0%, #4a33a0 100%);
         color: #fff;
         border: none;
-        padding: 10px 16px;
+        padding: 6px 14px;
         border-radius: 999px;
         cursor: pointer;
         text-decoration: none;
         font: inherit;
+        font-size: 0.85rem;
         font-weight: 700;
-        box-shadow: 0 8px 16px rgba(74, 51, 160, 0.2);
+        box-shadow: 0 6px 12px rgba(74, 51, 160, 0.2);
       }
 
       .quiz-action-bar .btn:hover,
@@ -80,7 +84,7 @@
       }
 
       body.quiz-controls-active {
-        padding-bottom: 110px !important;
+        padding-bottom: 96px !important;
       }
 
       body.quiz-controls-active .bottom-nav {
@@ -89,18 +93,18 @@
 
       @media (max-width: 520px) {
         .quiz-action-bar {
-          align-items: stretch;
-          bottom: 10px;
+          bottom: 0;
+          width: calc(100% - 12px);
         }
 
         .quiz-action-bar .btn,
         .quiz-action-bar button {
-          flex: 1 1 100%;
+          flex: 0 0 auto;
           text-align: center;
         }
 
         body.quiz-controls-active {
-          padding-bottom: 160px !important;
+          padding-bottom: 110px !important;
         }
       }
     `;
@@ -444,13 +448,13 @@
 
     const finishButton = document.createElement('button');
     finishButton.type = 'button';
-    finishButton.textContent = 'Finalizar Cuestionario';
+    finishButton.textContent = 'Finalizar';
     finishButton.addEventListener('click', finishQuiz);
 
     const menuLink = document.createElement('a');
     menuLink.href = 'index.html';
     menuLink.className = 'btn';
-    menuLink.textContent = 'Men\u00fa Principal';
+    menuLink.textContent = 'Men\u00fa';
 
     actionBar.appendChild(finishButton);
     actionBar.appendChild(menuLink);

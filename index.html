@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE9G1KRVW8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZE9G1KRVW8');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASCENSO DE CATEGORIA 2026</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="welcome-banner" id="welcome-banner" role="dialog" aria-live="polite" aria-label="Mensaje de bienvenida">
-<div class="welcome-banner-content">
-        <div class="welcome-banner-text">
-            <div class="welcome-title">¡BIENVENIDOS!</div>
-            <div class="welcome-sub">MATERIAL ELABORADO POR</div>
-            <div class="welcome-author">"PC DOCTOR"</div>
-            <div class="welcome-prof">PROFE. DANIEL LLANOS</div>
-            <div class="welcome-prof">CEL. 75136639</div>
-        </div>
+<header class="main-header" role="banner">
+    <div class="header-content">
+        <div class="pc-doctor-title">PC DOCTOR</div>
+        <p class="welcome-elaborado">MATERIAL ELABORADO POR:</p>
+        <p class="welcome-profesor">Prof. Daniel Llanos</p>
+        <p class="welcome-celular">📱 Celular: 75136639</p>
+        <a class="banner-advanced-btn" href="https://daniel247-10.github.io/simulador_premiun2026/">CUESTIONARIO AVANZADO</a>
     </div>
-</div>
+</header>
 <div class="container">
     <h1 class="main-title">ASCENSO DE CATEGORIA 2026</h1>
     <p class="subtitle">Explora diferentes temas y elige el cuestionario que más te interese.</p>
@@ -186,13 +193,5 @@
         </a>
     </div>
 </div>
-<script>
-    setTimeout(() => {
-        const banner = document.getElementById('welcome-banner');
-        if (banner) {
-            banner.classList.add('welcome-banner-hidden');
-        }
-    }, 1500);
-</script>
 </body>
 </html>
