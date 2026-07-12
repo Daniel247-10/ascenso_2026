@@ -45,7 +45,7 @@ body {
 }
 
 .pc-doctor-title {
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: clamp(2.25rem, 7.5vw, 4.5rem);
   font-weight: 900;
   color: #ff0000;
   text-shadow: 
@@ -106,6 +106,33 @@ body {
   font-weight: 700;
   color: #e0f7ff;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.banner-advanced-btn {
+  display: inline-block;
+  margin: 16px auto 4px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #ffb703 0%, #ff8c00 100%);
+  color: #1a1a1a;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  border: 2px solid #ffffff;
+  border-radius: 50px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.banner-advanced-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  background: linear-gradient(135deg, #ffd23f 0%, #ff8c00 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  color: #000;
+}
+
+.banner-advanced-btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 
