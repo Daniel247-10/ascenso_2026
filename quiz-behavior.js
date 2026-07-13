@@ -87,22 +87,22 @@
         display: none !important;
       }
 
-      @media (max-width: 520px) {
-        .quiz-action-bar {
-          align-items: stretch;
-          bottom: 10px;
-        }
+        @media (max-width: 520px) {
+          .quiz-action-bar {
+            flex-wrap: nowrap;
+            bottom: 10px;
+          }
 
-        .quiz-action-bar .btn,
-        .quiz-action-bar button {
-          flex: 1 1 100%;
-          text-align: center;
-        }
+          .quiz-action-bar .btn,
+          .quiz-action-bar button {
+            flex: 1 1 auto;
+            text-align: center;
+          }
 
-        body.quiz-controls-active {
-          padding-bottom: 160px !important;
+          body.quiz-controls-active {
+            padding-bottom: 160px !important;
+          }
         }
-      }
     `;
     document.head.appendChild(style);
   }
